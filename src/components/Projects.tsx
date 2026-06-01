@@ -13,16 +13,26 @@ export default function Projects() {
   const displayedProjects = projects;
 
   return (
-    <section id="projects" className="section-padding" style={{ position: "relative" }}>
+    <section id="projects" className="section-padding" style={{ position: "relative", overflow: "hidden" }}>
       {/* Ambient glow */}
       <div
         className="gradient-orb"
         style={{
-          width: "600px",
-          height: "600px",
-          background: "radial-gradient(circle, rgba(212,165,116,0.05), transparent 70%)",
-          top: "20%",
+          width: "720px",
+          height: "720px",
+          background: "radial-gradient(circle, rgba(212,165,116,0.08), transparent 70%)",
+          top: "6%",
           right: "-20%",
+        }}
+      />
+      <div
+        className="gradient-orb animate-float"
+        style={{
+          width: "460px",
+          height: "460px",
+          background: "radial-gradient(circle, rgba(255,255,255,0.045), transparent 70%)",
+          bottom: "4%",
+          left: "-16%",
         }}
       />
 
@@ -34,9 +44,9 @@ export default function Projects() {
           <h2
             className="heading-section"
             style={{
-              fontSize: "clamp(2rem, 4vw, 3rem)",
-              marginBottom: "1rem",
-              maxWidth: "600px",
+              fontSize: "clamp(2.55rem, 5vw, 4.4rem)",
+              marginBottom: "1.25rem",
+              maxWidth: "760px",
             }}
           >
             Projects that showcase real{" "}
@@ -48,9 +58,9 @@ export default function Projects() {
           <p
             className="text-body"
             style={{
-              marginBottom: "4rem",
-              maxWidth: "500px",
-              fontSize: "0.95rem",
+              marginBottom: "5rem",
+              maxWidth: "560px",
+              fontSize: "1rem",
             }}
           >
             Each project represents a real challenge solved with thoughtful design and modern technology.
@@ -67,27 +77,38 @@ export default function Projects() {
                   cursor: "pointer",
                   position: "relative",
                   height: "100%",
+                  minHeight: "460px",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+                onMouseMove={(event) => {
+                  const rect = event.currentTarget.getBoundingClientRect();
+                  event.currentTarget.style.setProperty("--mouse-x", `${event.clientX - rect.left}px`);
+                  event.currentTarget.style.setProperty("--mouse-y", `${event.clientY - rect.top}px`);
                 }}
                 whileHover="hover"
                 variants={{
                   hover: {
-                    y: -10,
-                    scale: 1.02,
-                    boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5), 0 0 30px rgba(212, 165, 116, 0.15)",
+                    y: -14,
+                    scale: 1.018,
+                    rotateX: 1.5,
+                    rotateY: -1.5,
+                    boxShadow: "0 36px 90px rgba(0,0,0,0.55), 0 0 54px rgba(212, 165, 116, 0.18)",
                   }
                 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                 onClick={() => setSelectedProject(project)}
               >
                 {/* Project Image Header */}
                 <div
                   style={{
-                    height: "200px",
+                    height: "250px",
                     position: "relative",
                     overflow: "hidden",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    borderBottom: "1px solid rgba(255,255,255,0.07)",
                   }}
                 >
                   {/* Real Image of the project name */}
@@ -95,13 +116,14 @@ export default function Projects() {
                     src={`/projects/${project.id}.png`}
                     alt={project.title}
                     variants={{
-                      hover: { scale: 1.1 }
+                      hover: { scale: 1.09, y: -5 }
                     }}
-                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                     style={{
                       width: "100%",
                       height: "100%",
                       objectFit: "cover",
+                      filter: "saturate(1.05) contrast(1.05)",
                     }}
                   />
                   {/* Dark gradient overlay to ensure category badge is legible */}
@@ -109,7 +131,20 @@ export default function Projects() {
                     style={{
                       position: "absolute",
                       inset: 0,
-                      background: "linear-gradient(to bottom, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.7) 100%)",
+                      background: "linear-gradient(to bottom, rgba(10,10,10,0.02) 0%, rgba(10,10,10,0.78) 100%)",
+                      pointerEvents: "none",
+                    }}
+                  />
+                  <motion.div
+                    variants={{
+                      hover: { opacity: 1 }
+                    }}
+                    transition={{ duration: 0.45 }}
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      opacity: 0,
+                      background: "radial-gradient(circle at 50% 0%, rgba(212,165,116,0.2), transparent 50%)",
                       pointerEvents: "none",
                     }}
                   />
@@ -119,16 +154,16 @@ export default function Projects() {
                     className="glass"
                     style={{
                       position: "absolute",
-                      top: "1rem",
-                      right: "1rem",
-                      padding: "0.25rem 0.75rem",
+                      top: "1.15rem",
+                      right: "1.15rem",
+                      padding: "0.35rem 0.85rem",
                       borderRadius: "100px",
                       fontSize: "0.65rem",
-                      fontWeight: 500,
+                      fontWeight: 700,
                       color: "var(--color-text-primary)",
-                      background: "rgba(10, 10, 10, 0.6)",
-                      backdropFilter: "blur(4px)",
-                      letterSpacing: "0.05em",
+                      background: "rgba(10, 10, 10, 0.68)",
+                      backdropFilter: "blur(12px)",
+                      letterSpacing: "0.08em",
                       textTransform: "uppercase",
                       zIndex: 2,
                     }}
@@ -140,12 +175,12 @@ export default function Projects() {
                 </div>
 
                 {/* Card content */}
-                <div style={{ padding: "1.75rem" }}>
+                <div style={{ padding: "2rem", flex: 1 }}>
                   <h3
                     className="heading-section"
                     style={{
-                      fontSize: "1.25rem",
-                      marginBottom: "0.75rem",
+                      fontSize: "1.45rem",
+                      marginBottom: "0.85rem",
                     }}
                   >
                     {project.title}
@@ -153,26 +188,26 @@ export default function Projects() {
                   <p
                     className="text-body"
                     style={{
-                      fontSize: "0.875rem",
-                      marginBottom: "1.25rem",
-                      lineHeight: 1.6,
+                      fontSize: "0.92rem",
+                      marginBottom: "1.5rem",
+                      lineHeight: 1.75,
                     }}
                   >
                     {project.description}
                   </p>
 
                   {/* Tech tags */}
-                  <div style={{ display: "flex", gap: "0.375rem", flexWrap: "wrap" }}>
+                  <div style={{ display: "flex", gap: "0.45rem", flexWrap: "wrap" }}>
                     {project.techStack.slice(0, 3).map((tech) => (
                       <span
                         key={tech}
                         style={{
-                          padding: "0.25rem 0.625rem",
+                          padding: "0.35rem 0.72rem",
                           borderRadius: "100px",
-                          fontSize: "0.675rem",
+                          fontSize: "0.7rem",
                           fontWeight: 500,
-                          color: "var(--color-text-tertiary)",
-                          background: "var(--color-bg-tertiary)",
+                          color: "rgba(245,245,247,0.64)",
+                          background: "rgba(255,255,255,0.045)",
                           border: "1px solid var(--color-border-subtle)",
                         }}
                       >
@@ -182,12 +217,12 @@ export default function Projects() {
                     {project.techStack.length > 3 && (
                       <span
                         style={{
-                          padding: "0.25rem 0.625rem",
+                          padding: "0.35rem 0.72rem",
                           borderRadius: "100px",
-                          fontSize: "0.675rem",
+                          fontSize: "0.7rem",
                           fontWeight: 500,
-                          color: "var(--color-text-tertiary)",
-                          background: "var(--color-bg-tertiary)",
+                          color: "rgba(245,245,247,0.64)",
+                          background: "rgba(255,255,255,0.045)",
                           border: "1px solid var(--color-border-subtle)",
                         }}
                       >
@@ -200,11 +235,13 @@ export default function Projects() {
                 {/* Bottom bar with action links */}
                 <div
                   style={{
-                    padding: "1rem 1.75rem",
+                    padding: "1.15rem 2rem",
                     borderTop: "1px solid var(--color-border-subtle)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    gap: "1rem",
+                    background: "rgba(0,0,0,0.14)",
                   }}
                   onClick={(e) => e.stopPropagation()} // Prevent card click propagation
                 >
@@ -219,7 +256,7 @@ export default function Projects() {
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
-                      gap: "0.25rem",
+                      gap: "0.35rem",
                       padding: 0,
                       transition: "color 0.3s ease",
                     }}
@@ -256,7 +293,7 @@ export default function Projects() {
                       textDecoration: "none",
                       display: "flex",
                       alignItems: "center",
-                      gap: "0.25rem",
+                      gap: "0.35rem",
                       transition: "color 0.3s ease",
                     }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-accent-warm)")}

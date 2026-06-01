@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { techStack, coreSkills, currentlyLearning } from "@/data/portfolio";
+import { techStack, coreSkills } from "@/data/portfolio";
 import ScrollReveal from "./ScrollReveal";
 
 // Tech icon mapping (using simple SVG or colored dots as visual indicators)
@@ -29,25 +29,27 @@ const categoryBorderColors: Record<string, string> = {
   "Deployment & Tools": "rgba(244, 63, 94, 0.25)",
 };
 
+void categoryIcons;
+
 export default function TechStack() {
   return (
-    <section id="skills" className="section-padding" style={{ position: "relative" }}>
+    <section id="skills" className="section-padding" style={{ position: "relative", overflow: "hidden" }}>
       {/* Ambient glow */}
       <div
         className="gradient-orb"
         style={{
-          width: "500px",
-          height: "500px",
-          background: "radial-gradient(circle, rgba(212,165,116,0.06), transparent 70%)",
-          top: "30%",
-          right: "-15%",
+          width: "650px",
+          height: "650px",
+          background: "radial-gradient(circle, rgba(212,165,116,0.085), transparent 70%)",
+          top: "16%",
+          right: "-18%",
         }}
       />
 
       <div className="content-container">
         {/* Section Header */}
         <ScrollReveal>
-          <p className="text-label" style={{ marginBottom: "1rem" }}>
+          <p className="text-label section-kicker" style={{ marginBottom: "1.25rem" }}>
             Skills & Technologies
           </p>
         </ScrollReveal>
@@ -56,9 +58,9 @@ export default function TechStack() {
           <h2
             className="heading-section"
             style={{
-              fontSize: "clamp(2rem, 4vw, 3rem)",
-              marginBottom: "4rem",
-              maxWidth: "600px",
+              fontSize: "clamp(2.45rem, 5vw, 4.15rem)",
+              marginBottom: "4.7rem",
+              maxWidth: "740px",
             }}
           >
             The{" "}
@@ -74,24 +76,49 @@ export default function TechStack() {
                 className="card"
                 style={{
                   padding: "1.75rem",
-                  borderRadius: "16px",
+                  borderRadius: "20px",
                   height: "100%",
                   transition: "all 0.4s var(--transition-smooth)",
                 }}
                 whileHover={{
-                  scale: 1.02,
-                  transition: { duration: 0.3 },
+                  y: -8,
+                  scale: 1.025,
+                  transition: { duration: 0.35 },
                 }}
               >
+                <div
+                  style={{
+                    width: "38px",
+                    height: "38px",
+                    borderRadius: "14px",
+                    background: categoryColors[category.name],
+                    border: `1px solid ${categoryBorderColors[category.name]}`,
+                    marginBottom: "1.35rem",
+                    boxShadow: "0 0 28px rgba(212,165,116,0.08)",
+                    display: "grid",
+                    placeItems: "center",
+                  }}
+                >
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      width: "8px",
+                      height: "8px",
+                      borderRadius: "50%",
+                      background: "var(--color-accent-warm)",
+                      boxShadow: "0 0 18px rgba(212,165,116,0.65)",
+                    }}
+                  />
+                </div>
 
                 {/* Category name */}
                 <h3
                   style={{
-                    fontSize: "0.9rem",
-                    fontWeight: 600,
+                    fontSize: "1rem",
+                    fontWeight: 700,
                     color: "var(--color-text-primary)",
-                    marginBottom: "1rem",
-                    letterSpacing: "-0.01em",
+                    marginBottom: "1.15rem",
+                    letterSpacing: "-0.02em",
                   }}
                 >
                   {category.name}
@@ -102,7 +129,7 @@ export default function TechStack() {
                   style={{
                     display: "flex",
                     flexWrap: "wrap",
-                    gap: "0.5rem",
+                    gap: "0.55rem",
                   }}
                 >
                   {category.items.map((item) => (
@@ -117,12 +144,12 @@ export default function TechStack() {
                       }}
                       transition={{ type: "spring", stiffness: 300, damping: 15 }}
                       style={{
-                        padding: "0.375rem 0.875rem",
+                        padding: "0.45rem 0.9rem",
                         borderRadius: "100px",
                         fontSize: "0.75rem",
                         fontWeight: 500,
                         color: "var(--color-text-secondary)",
-                        background: "var(--color-bg-tertiary)",
+                        background: "rgba(255,255,255,0.04)",
                         border: "1px solid var(--color-border-subtle)",
                         cursor: "default",
                         transition: "border-color 0.3s ease, color 0.3s ease",
@@ -142,26 +169,50 @@ export default function TechStack() {
               className="card"
               style={{
                 padding: "1.75rem",
-                borderRadius: "16px",
+                borderRadius: "20px",
                 height: "100%",
                 transition: "all 0.4s var(--transition-smooth)",
                 display: "flex",
                 flexDirection: "column",
               }}
               whileHover={{
-                scale: 1.02,
-                transition: { duration: 0.3 },
+                y: -8,
+                scale: 1.025,
+                transition: { duration: 0.35 },
               }}
             >
+              <div
+                style={{
+                  width: "38px",
+                  height: "38px",
+                  borderRadius: "14px",
+                  background: "rgba(212, 165, 116, 0.12)",
+                  border: "1px solid rgba(212, 165, 116, 0.25)",
+                  marginBottom: "1.35rem",
+                  display: "grid",
+                  placeItems: "center",
+                }}
+              >
+                <span
+                  aria-hidden="true"
+                  style={{
+                    width: "8px",
+                    height: "8px",
+                    borderRadius: "50%",
+                    background: "var(--color-accent-warm)",
+                    boxShadow: "0 0 18px rgba(212,165,116,0.65)",
+                  }}
+                />
+              </div>
 
               {/* Category name */}
               <h3
                 style={{
-                  fontSize: "0.9rem",
-                  fontWeight: 600,
+                  fontSize: "1rem",
+                  fontWeight: 700,
                   color: "var(--color-accent-warm)",
-                  marginBottom: "1rem",
-                  letterSpacing: "-0.01em",
+                  marginBottom: "1.15rem",
+                  letterSpacing: "-0.02em",
                 }}
               >
                 Core Skills
@@ -172,7 +223,7 @@ export default function TechStack() {
                 style={{
                   display: "flex",
                   flexWrap: "wrap",
-                  gap: "0.5rem",
+                  gap: "0.55rem",
                 }}
               >
                 {coreSkills.map((skill) => (
@@ -187,7 +238,7 @@ export default function TechStack() {
                     }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
                     style={{
-                      padding: "0.375rem 0.875rem",
+                      padding: "0.45rem 0.9rem",
                       borderRadius: "100px",
                       fontSize: "0.75rem",
                       fontWeight: 500,

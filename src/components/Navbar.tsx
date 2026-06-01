@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { scrollY } = useScroll();
-  const bgOpacity = useTransform(scrollY, [0, 100], [0, 1]);
+  const bgOpacity = useTransform(scrollY, [0, 80], [0.36, 1]);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -20,8 +20,12 @@ export default function Navbar() {
       <motion.nav
         className="navbar glass"
         style={{
-          padding: scrolled ? "0.875rem 2rem" : "1.25rem 2rem",
+          padding: scrolled ? "0.8rem 2rem" : "1.15rem 2rem",
           opacity: bgOpacity,
+          background: scrolled
+            ? "rgba(10, 10, 10, 0.72)"
+            : "linear-gradient(180deg, rgba(10, 10, 10, 0.52), rgba(10, 10, 10, 0.18))",
+          backdropFilter: "blur(24px) saturate(135%)",
         }}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -42,13 +46,14 @@ export default function Navbar() {
             href="#"
             style={{
               fontWeight: 700,
-              fontSize: "1rem",
+              fontSize: "0.95rem",
               color: "var(--color-text-primary)",
               textDecoration: "none",
               letterSpacing: "-0.02em",
               whiteSpace: "nowrap",
               transition: "all 0.3s ease",
               display: "inline-block",
+              textShadow: "0 0 28px rgba(212,165,116,0.14)",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.color = "var(--color-accent-warm)";
@@ -67,7 +72,11 @@ export default function Navbar() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "1.75rem",
+              gap: "0.35rem",
+              padding: "0.35rem",
+              borderRadius: "999px",
+              background: "rgba(255, 255, 255, 0.035)",
+              border: "1px solid rgba(255,255,255,0.055)",
             }}
             className="nav-desktop"
           >
@@ -79,17 +88,21 @@ export default function Navbar() {
                   color: "var(--color-text-secondary)",
                   textDecoration: "none",
                   fontSize: "0.8rem",
-                  fontWeight: 500,
+                  fontWeight: 600,
                   letterSpacing: "0.01em",
                   transition: "all 0.3s ease",
                   whiteSpace: "nowrap",
+                  padding: "0.48rem 0.86rem",
+                  borderRadius: "999px",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "var(--color-accent-warm)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "var(--color-text-secondary)")
-                }
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "var(--color-accent-warm)";
+                  e.currentTarget.style.background = "rgba(212, 165, 116, 0.08)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "var(--color-text-secondary)";
+                  e.currentTarget.style.background = "transparent";
+                }}
               >
                 {link.label}
               </a>
@@ -103,10 +116,11 @@ export default function Navbar() {
             aria-label="Toggle menu"
             style={{
               display: "none",
-              background: "none",
-              border: "none",
               cursor: "pointer",
-              padding: "4px",
+              padding: "0.6rem",
+              borderRadius: "999px",
+              border: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.04)",
             }}
           >
             <div
@@ -172,13 +186,13 @@ export default function Navbar() {
                 top: "100%",
                 left: 0,
                 right: 0,
-                background: "rgba(10, 10, 10, 0.96)",
-                backdropFilter: "blur(20px)",
+                background: "rgba(10, 10, 10, 0.9)",
+                backdropFilter: "blur(26px) saturate(135%)",
                 borderBottom: "1px solid var(--color-border-subtle)",
-                padding: "1rem 2rem 1.5rem",
+                padding: "1rem 1.25rem 1.35rem",
                 display: "flex",
                 flexDirection: "column",
-                gap: "1rem",
+                gap: "0.35rem",
                 overflow: "hidden",
               }}
             >
@@ -191,17 +205,21 @@ export default function Navbar() {
                     color: "var(--color-text-secondary)",
                     textDecoration: "none",
                     fontSize: "0.95rem",
-                    fontWeight: 500,
-                    padding: "0.5rem 0",
-                    borderBottom: "1px solid rgba(255, 255, 255, 0.03)",
-                    transition: "color 0.2s ease",
+                    fontWeight: 600,
+                    padding: "0.85rem 1rem",
+                    borderRadius: "14px",
+                    border: "1px solid rgba(255, 255, 255, 0.04)",
+                    background: "rgba(255,255,255,0.025)",
+                    transition: "all 0.2s ease",
                   }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "var(--color-accent-warm)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = "var(--color-text-secondary)")
-                  }
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "var(--color-accent-warm)";
+                    e.currentTarget.style.background = "rgba(212, 165, 116, 0.08)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "var(--color-text-secondary)";
+                    e.currentTarget.style.background = "rgba(255,255,255,0.025)";
+                  }}
                 >
                   {link.label}
                 </a>

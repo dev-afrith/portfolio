@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { type Project } from "@/data/portfolio";
+import Image from "next/image";
 import { useEffect } from "react";
 
 interface ProjectModalProps {
@@ -32,16 +33,16 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.35 }}
           onClick={onClose}
         >
           <motion.div
             className="project-modal-content"
             data-lenis-prevent
-            initial={{ opacity: 0, y: 40, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 40, scale: 0.95 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, y: 54, scale: 0.94, filter: "blur(10px)" }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: 54, scale: 0.94, filter: "blur(10px)" }}
+            transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
             style={{ position: "relative" }}
           >
@@ -55,23 +56,23 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                 pointerEvents: "none",
               }}
             >
-              <img
+              <Image
                 src={`/projects/${project.id}.png`}
                 alt=""
+                fill
+                sizes="900px"
                 style={{
-                  width: "100%",
-                  height: "100%",
                   objectFit: "cover",
-                  filter: "blur(60px)",
-                  opacity: 0.12,
-                  transform: "scale(1.2)",
+                  filter: "blur(68px) saturate(1.2)",
+                  opacity: 0.16,
+                  transform: "scale(1.24)",
                 }}
               />
               <div
                 style={{
                   position: "absolute",
                   inset: 0,
-                  background: "radial-gradient(circle at 50% 30%, rgba(212, 165, 116, 0.05), transparent 70%)",
+                  background: "linear-gradient(180deg, rgba(10,10,10,0.34), rgba(10,10,10,0.96)), radial-gradient(circle at 50% 20%, rgba(212, 165, 116, 0.1), transparent 70%)",
                 }}
               />
             </div>
@@ -86,11 +87,11 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                 float: "right",
                 marginRight: "1.5rem",
                 zIndex: 10,
-                background: "var(--color-bg-tertiary)",
-                border: "1px solid var(--color-border-subtle)",
+                background: "rgba(255,255,255,0.055)",
+                border: "1px solid rgba(255,255,255,0.1)",
                 borderRadius: "50%",
-                width: "36px",
-                height: "36px",
+                width: "42px",
+                height: "42px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -122,15 +123,16 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
             </button>
 
             {/* Modal content */}
-            <div style={{ padding: "3rem 2.5rem", position: "relative", zIndex: 1 }}>
+            <div style={{ padding: "clamp(2rem, 5vw, 3.4rem)", position: "relative", zIndex: 1 }}>
               {/* Header gradient bar */}
               <div
                 style={{
                   width: "100%",
-                  height: "4px",
+                  height: "5px",
                   borderRadius: "2px",
-                  background: `linear-gradient(90deg, var(--color-accent-warm), transparent)`,
-                  marginBottom: "2rem",
+                  background: `linear-gradient(90deg, var(--color-accent-warm), rgba(255,255,255,0.2), transparent)`,
+                  marginBottom: "2.2rem",
+                  boxShadow: "0 0 24px rgba(212,165,116,0.2)",
                 }}
               />
 
@@ -143,8 +145,8 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
               <h2
                 className="heading-section"
                 style={{
-                  fontSize: "clamp(1.75rem, 3vw, 2.5rem)",
-                  marginBottom: "1.5rem",
+                  fontSize: "clamp(2rem, 4vw, 3.45rem)",
+                  marginBottom: "1.6rem",
                 }}
               >
                 {project.title}
@@ -154,9 +156,9 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
               <p
                 className="text-body"
                 style={{
-                  fontSize: "1rem",
-                  marginBottom: "2.5rem",
-                  maxWidth: "600px",
+                  fontSize: "1.03rem",
+                  marginBottom: "2.8rem",
+                  maxWidth: "680px",
                 }}
               >
                 {project.longDescription}
@@ -180,7 +182,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                   style={{
                     display: "grid",
                     gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                    gap: "0.75rem",
+                    gap: "0.85rem",
                   }}
                 >
                   {project.highlights.map((h) => (
@@ -190,17 +192,22 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                         display: "flex",
                         alignItems: "center",
                         gap: "0.5rem",
-                        fontSize: "0.875rem",
+                        fontSize: "0.9rem",
                         color: "var(--color-text-secondary)",
+                        padding: "0.85rem 0.95rem",
+                        borderRadius: "14px",
+                        background: "rgba(255,255,255,0.032)",
+                        border: "1px solid rgba(255,255,255,0.05)",
                       }}
                     >
                       <span
                         style={{
-                          width: "4px",
-                          height: "4px",
+                          width: "5px",
+                          height: "5px",
                           borderRadius: "50%",
                           background: "var(--color-accent-warm)",
                           flexShrink: 0,
+                          boxShadow: "0 0 14px rgba(212,165,116,0.5)",
                         }}
                       />
                       {h}
@@ -229,7 +236,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                       key={tech}
                       className="glass"
                       style={{
-                        padding: "0.375rem 0.875rem",
+                        padding: "0.45rem 0.95rem",
                         borderRadius: "100px",
                         fontSize: "0.75rem",
                         fontWeight: 500,

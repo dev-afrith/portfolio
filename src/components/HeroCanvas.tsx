@@ -4,6 +4,11 @@ import { useRef, useMemo, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
+function seededParticleValue(index: number, axis: number) {
+  const x = Math.sin(index * 12.9898 + axis * 78.233) * 43758.5453;
+  return (x - Math.floor(x) - 0.5) * 20;
+}
+
 function ParticleField() {
   const meshRef = useRef<THREE.Points>(null);
   const geoRef = useRef<THREE.BufferGeometry>(null);
@@ -12,9 +17,9 @@ function ParticleField() {
   const positions = useMemo(() => {
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 20;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 20;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 20;
+      pos[i * 3] = seededParticleValue(i, 0);
+      pos[i * 3 + 1] = seededParticleValue(i, 1);
+      pos[i * 3 + 2] = seededParticleValue(i, 2);
     }
     return pos;
   }, []);

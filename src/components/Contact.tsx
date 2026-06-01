@@ -53,16 +53,16 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="section-padding" style={{ position: "relative" }}>
+    <section id="contact" className="section-padding" style={{ position: "relative", overflow: "hidden" }}>
       {/* Ambient glow */}
       <div
         className="gradient-orb"
         style={{
-          width: "500px",
-          height: "500px",
-          background: "radial-gradient(circle, rgba(212,165,116,0.06), transparent 70%)",
-          bottom: "20%",
-          right: "-10%",
+          width: "680px",
+          height: "680px",
+          background: "radial-gradient(circle, rgba(212,165,116,0.09), transparent 70%)",
+          bottom: "6%",
+          right: "-18%",
         }}
       />
 
@@ -72,7 +72,7 @@ export default function Contact() {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: "4rem",
+            gap: "clamp(3rem, 7vw, 6rem)",
             alignItems: "center",
           }}
         >
@@ -80,7 +80,7 @@ export default function Contact() {
           <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
             <div>
               <ScrollReveal>
-                <p className="text-label" style={{ marginBottom: "1rem" }}>
+                <p className="text-label section-kicker" style={{ marginBottom: "1.25rem" }}>
                   Get In Touch
                 </p>
               </ScrollReveal>
@@ -89,8 +89,9 @@ export default function Contact() {
                 <h2
                   className="heading-section"
                   style={{
-                    fontSize: "clamp(2rem, 3.5vw, 2.5rem)",
-                    marginBottom: "1rem",
+                    fontSize: "clamp(2.35rem, 4.4vw, 3.85rem)",
+                    marginBottom: "1.25rem",
+                    maxWidth: "620px",
                   }}
                 >
                   Let&apos;s build something{" "}
@@ -103,7 +104,8 @@ export default function Contact() {
                   className="text-body"
                   style={{
                     fontSize: "0.95rem",
-                    lineHeight: 1.6,
+                    lineHeight: 1.8,
+                    maxWidth: "520px",
                   }}
                 >
                   Have a project in mind or want to collaborate? I&apos;d love to hear from you.
@@ -121,7 +123,7 @@ export default function Contact() {
                     display: "flex",
                     alignItems: "center",
                     gap: "1.25rem",
-                    padding: "1.5rem",
+                    padding: "1.45rem",
                     color: "var(--color-text-primary)",
                     textDecoration: "none",
                     transition: "all 0.3s ease",
@@ -131,7 +133,7 @@ export default function Contact() {
                     style={{
                       width: "48px",
                       height: "48px",
-                      borderRadius: "50%",
+                      borderRadius: "16px",
                       background: "var(--color-accent-glow)",
                       display: "flex",
                       alignItems: "center",
@@ -190,7 +192,7 @@ export default function Contact() {
                     display: "flex",
                     alignItems: "center",
                     gap: "1.25rem",
-                    padding: "1.5rem",
+                    padding: "1.45rem",
                     color: "var(--color-text-primary)",
                     textDecoration: "none",
                     transition: "all 0.3s ease",
@@ -200,7 +202,7 @@ export default function Contact() {
                     style={{
                       width: "48px",
                       height: "48px",
-                      borderRadius: "50%",
+                      borderRadius: "16px",
                       background: "var(--color-accent-glow)",
                       display: "flex",
                       alignItems: "center",
@@ -259,7 +261,7 @@ export default function Contact() {
                     display: "flex",
                     alignItems: "center",
                     gap: "1.25rem",
-                    padding: "1.5rem",
+                    padding: "1.45rem",
                     color: "var(--color-text-primary)",
                     textDecoration: "none",
                     transition: "all 0.3s ease",
@@ -269,7 +271,7 @@ export default function Contact() {
                     style={{
                       width: "48px",
                       height: "48px",
-                      borderRadius: "50%",
+                      borderRadius: "16px",
                       background: "var(--color-accent-glow)",
                       display: "flex",
                       alignItems: "center",
@@ -319,7 +321,7 @@ export default function Contact() {
                     display: "flex",
                     alignItems: "center",
                     gap: "1.25rem",
-                    padding: "1.5rem",
+                    padding: "1.45rem",
                     color: "var(--color-text-primary)",
                     textDecoration: "none",
                     transition: "all 0.3s ease",
@@ -329,7 +331,7 @@ export default function Contact() {
                     style={{
                       width: "48px",
                       height: "48px",
-                      borderRadius: "50%",
+                      borderRadius: "16px",
                       background: "var(--color-accent-glow)",
                       display: "flex",
                       alignItems: "center",
@@ -374,14 +376,20 @@ export default function Contact() {
           {/* Right Column: Contact Form */}
           <div style={{ width: "100%" }}>
             <ScrollReveal delay={0.25}>
-              <form onSubmit={handleSubmit}>
+              <form
+                onSubmit={handleSubmit}
+                className="premium-panel"
+                style={{
+                  padding: "clamp(1.35rem, 4vw, 2.4rem)",
+                }}
+              >
                 <div
                   className="contact-form-row"
                   style={{
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
-                    gap: "1rem",
-                    marginBottom: "1rem",
+                    gap: "1.05rem",
+                    marginBottom: "1.05rem",
                   }}
                 >
                   <input
@@ -423,7 +431,7 @@ export default function Contact() {
                     setFormData({ ...formData, subject: e.target.value })
                   }
                   id="contact-subject"
-                  style={{ marginBottom: "1rem" }}
+                  style={{ marginBottom: "1.05rem" }}
                 />
                 <textarea
                   className="form-input"
@@ -435,14 +443,14 @@ export default function Contact() {
                   }
                   required
                   id="contact-message"
-                  style={{ marginBottom: "1.5rem", resize: "vertical" }}
+                  style={{ marginBottom: "1.65rem", resize: "vertical" }}
                 />
 
                 <motion.button
                   type="submit"
                   className="btn-primary"
                   disabled={status === "sending"}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ y: -2, scale: 1.01 }}
                   whileTap={{ scale: 0.98 }}
                   style={{
                     width: "100%",

@@ -12,23 +12,23 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="section-padding" style={{ position: "relative" }}>
+    <section id="about" className="section-padding" style={{ position: "relative", overflow: "hidden" }}>
       {/* Ambient glow */}
       <div
         className="gradient-orb"
         style={{
-          width: "500px",
-          height: "500px",
-          background: "radial-gradient(circle, rgba(212,165,116,0.06), transparent 70%)",
-          top: "10%",
-          left: "-15%",
+          width: "620px",
+          height: "620px",
+          background: "radial-gradient(circle, rgba(212,165,116,0.08), transparent 70%)",
+          top: "2%",
+          left: "-20%",
         }}
       />
 
       <div className="content-container">
         {/* Section label */}
         <ScrollReveal>
-          <p className="text-label" style={{ marginBottom: "1rem" }}>
+          <p className="text-label section-kicker" style={{ marginBottom: "1.25rem" }}>
             About
           </p>
         </ScrollReveal>
@@ -38,9 +38,9 @@ export default function About() {
           <h2
             className="heading-section"
             style={{
-              fontSize: "clamp(2rem, 4vw, 3rem)",
-              marginBottom: "3rem",
-              maxWidth: "700px",
+              fontSize: "clamp(2.45rem, 5vw, 4.15rem)",
+              marginBottom: "3.4rem",
+              maxWidth: "880px",
             }}
           >
             Building products that feel{" "}
@@ -55,19 +55,25 @@ export default function About() {
           style={{
             display: "grid",
             gridTemplateColumns: "1fr",
-            gap: "4rem",
+            gap: "4.5rem",
           }}
         >
           {/* Text */}
-          <div>
+          <div
+            className="premium-panel"
+            style={{
+              padding: "clamp(1.5rem, 4vw, 3.2rem)",
+              maxWidth: "850px",
+            }}
+          >
             {personalInfo.about.map((para, i) => (
               <ScrollReveal key={i} delay={0.15 + i * 0.1}>
                 <p
                   className="text-body"
                   style={{
-                    marginBottom: i < personalInfo.about.length - 1 ? "1.5rem" : "0",
-                    fontSize: "1rem",
-                    maxWidth: "700px",
+                    marginBottom: i < personalInfo.about.length - 1 ? "1.65rem" : "0",
+                    fontSize: "1.04rem",
+                    maxWidth: "760px",
                   }}
                 >
                   {para}
@@ -85,7 +91,7 @@ export default function About() {
               display: "grid",
               gridTemplateColumns: "repeat(2, 1fr)",
               gap: "1.5rem",
-              marginTop: "4rem",
+              marginTop: "4.5rem",
             }}
           >
             {stats.map((stat) => (
@@ -93,17 +99,18 @@ export default function About() {
                 key={stat.label}
                 className="glass"
                 style={{
-                  padding: "1.5rem",
-                  borderRadius: "16px",
+                  padding: "1.85rem 1.25rem",
+                  borderRadius: "20px",
                   textAlign: "center",
                 }}
               >
                 <p
                   className="heading-section"
                   style={{
-                    fontSize: "1.75rem",
+                    fontSize: "2.05rem",
                     color: "var(--color-accent-warm)",
-                    marginBottom: "0.25rem",
+                    marginBottom: "0.35rem",
+                    textShadow: "0 0 30px rgba(212,165,116,0.22)",
                   }}
                 >
                   {stat.value}
@@ -112,7 +119,7 @@ export default function About() {
                   style={{
                     fontSize: "0.75rem",
                     color: "var(--color-text-tertiary)",
-                    letterSpacing: "0.05em",
+                    letterSpacing: "0.08em",
                     textTransform: "uppercase",
                   }}
                 >

@@ -16,18 +16,18 @@ export default function ScrollReveal({
   children,
   delay = 0,
   direction = "up",
-  duration = 0.7,
+  duration = 0.9,
   className,
   style,
 }: ScrollRevealProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const isInView = useInView(ref, { once: true, margin: "-120px" });
 
   const directionMap = {
-    up: { y: 40, x: 0 },
-    down: { y: -40, x: 0 },
-    left: { y: 0, x: 40 },
-    right: { y: 0, x: -40 },
+    up: { y: 54, x: 0 },
+    down: { y: -54, x: 0 },
+    left: { y: 0, x: 54 },
+    right: { y: 0, x: -54 },
     none: { y: 0, x: 0 },
   };
 
@@ -38,8 +38,12 @@ export default function ScrollReveal({
       ref={ref}
       className={className}
       style={style}
-      initial={{ opacity: 0, ...initial }}
-      animate={isInView ? { opacity: 1, y: 0, x: 0 } : { opacity: 0, ...initial }}
+      initial={{ opacity: 0, filter: "blur(10px)", ...initial }}
+      animate={
+        isInView
+          ? { opacity: 1, y: 0, x: 0, filter: "blur(0px)" }
+          : { opacity: 0, filter: "blur(10px)", ...initial }
+      }
       transition={{
         duration,
         delay,

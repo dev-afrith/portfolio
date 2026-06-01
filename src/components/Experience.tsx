@@ -5,23 +5,23 @@ import ScrollReveal from "./ScrollReveal";
 
 export default function Experience() {
   return (
-    <section id="experience" className="section-padding" style={{ position: "relative" }}>
+    <section id="experience" className="section-padding" style={{ position: "relative", overflow: "hidden" }}>
       {/* Ambient glow */}
       <div
         className="gradient-orb"
         style={{
-          width: "500px",
-          height: "500px",
-          background: "radial-gradient(circle, rgba(212,165,116,0.05), transparent 70%)",
-          bottom: "10%",
-          left: "-10%",
+          width: "620px",
+          height: "620px",
+          background: "radial-gradient(circle, rgba(212,165,116,0.075), transparent 70%)",
+          bottom: "3%",
+          left: "-18%",
         }}
       />
 
       <div className="content-container">
         {/* Section Header */}
         <ScrollReveal>
-          <p className="text-label" style={{ marginBottom: "1rem" }}>
+          <p className="text-label section-kicker" style={{ marginBottom: "1.25rem" }}>
             Experience
           </p>
         </ScrollReveal>
@@ -30,9 +30,9 @@ export default function Experience() {
           <h2
             className="heading-section"
             style={{
-              fontSize: "clamp(2rem, 4vw, 3rem)",
-              marginBottom: "4rem",
-              maxWidth: "600px",
+              fontSize: "clamp(2.45rem, 5vw, 4.15rem)",
+              marginBottom: "4.6rem",
+              maxWidth: "760px",
             }}
           >
             Professional{" "}
@@ -45,7 +45,7 @@ export default function Experience() {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: "2rem",
+            gap: "2.25rem",
             alignItems: "stretch",
           }}
         >
@@ -54,12 +54,12 @@ export default function Experience() {
               <div
                 className="card"
                 style={{
-                  padding: "2.25rem",
+                  padding: "2.65rem",
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
-                  transition: "all 0.4s var(--transition-smooth)",
+                  transition: "all 0.5s var(--transition-smooth)",
                 }}
               >
                 <div>
@@ -68,9 +68,10 @@ export default function Experience() {
                     style={{
                       fontSize: "0.75rem",
                       color: "var(--color-accent-warm)",
-                      fontWeight: 600,
-                      letterSpacing: "0.05em",
-                      marginBottom: "0.5rem",
+                      fontWeight: 700,
+                      letterSpacing: "0.08em",
+                      marginBottom: "0.75rem",
+                      textTransform: "uppercase",
                     }}
                   >
                     {exp.period}
@@ -79,7 +80,7 @@ export default function Experience() {
                   {/* Role */}
                   <h3
                     className="heading-section"
-                    style={{ fontSize: "1.25rem", marginBottom: "0.25rem" }}
+                    style={{ fontSize: "1.45rem", marginBottom: "0.35rem" }}
                   >
                     {exp.role}
                   </h3>
@@ -89,7 +90,7 @@ export default function Experience() {
                     style={{
                       fontSize: "0.875rem",
                       color: "var(--color-text-secondary)",
-                      marginBottom: "1.25rem",
+                      marginBottom: "1.55rem",
                     }}
                   >
                     {exp.company}
@@ -101,7 +102,7 @@ export default function Experience() {
                       listStyle: "none",
                       display: "flex",
                       flexDirection: "column",
-                      gap: "0.625rem",
+                      gap: "0.8rem",
                     }}
                   >
                     {exp.description.map((item, j) => (
@@ -111,9 +112,9 @@ export default function Experience() {
                           display: "flex",
                           alignItems: "flex-start",
                           gap: "0.625rem",
-                          fontSize: "0.875rem",
+                          fontSize: "0.92rem",
                           color: "var(--color-text-secondary)",
-                          lineHeight: 1.6,
+                          lineHeight: 1.72,
                         }}
                       >
                         <span
@@ -123,7 +124,8 @@ export default function Experience() {
                             borderRadius: "50%",
                             background: "var(--color-accent-warm)",
                             flexShrink: 0,
-                            marginTop: "0.5rem",
+                            marginTop: "0.65rem",
+                            boxShadow: "0 0 14px rgba(212,165,116,0.45)",
                           }}
                         />
                         {item}
@@ -133,10 +135,10 @@ export default function Experience() {
                 </div>
 
                 {/* Type badge */}
-                <div style={{ marginTop: "1.75rem" }}>
+                <div style={{ marginTop: "2rem" }}>
                   <span
                     style={{
-                      padding: "0.25rem 0.75rem",
+                      padding: "0.35rem 0.9rem",
                       borderRadius: "100px",
                       fontSize: "0.65rem",
                       fontWeight: 600,

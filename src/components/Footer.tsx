@@ -49,8 +49,9 @@ export default function Footer() {
     <footer
       style={{
         borderTop: "1px solid var(--color-border-subtle)",
-        padding: "1.5rem 2rem",
+        padding: "1.65rem 2rem",
         position: "relative",
+        background: "linear-gradient(180deg, rgba(255,255,255,0.018), rgba(0,0,0,0.18))",
       }}
     >
       <div
@@ -76,6 +77,7 @@ export default function Footer() {
             letterSpacing: "-0.02em",
             transition: "all 0.3s var(--transition-smooth)",
             display: "inline-block",
+            textShadow: "0 0 24px rgba(212,165,116,0.12)",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.color = "var(--color-accent-warm)";
@@ -121,12 +123,13 @@ export default function Footer() {
                 border: "1px solid var(--color-border-subtle)",
                 transition: "all 0.3s ease",
                 textDecoration: "none",
+                background: "rgba(255,255,255,0.025)",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.color = "var(--color-accent-warm)";
                 e.currentTarget.style.borderColor = "var(--color-accent-warm)";
                 e.currentTarget.style.background = "var(--color-accent-glow)";
-                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.transform = "translateY(-3px) scale(1.04)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.color = "var(--color-text-tertiary)";
