@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     canonical: "https://muhammadafrithportfolio.vercel.app",
   },
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+    google: "h5UKHIdVvphAYlYERjqpj3elpjWFVtQ5tduglAl62nA",
   },
 };
 
