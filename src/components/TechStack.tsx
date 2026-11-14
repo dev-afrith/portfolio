@@ -1,17 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { techStack, coreSkills } from "@/data/portfolio";
+import { techStack, coreSkills, currentlyLearning } from "@/data/portfolio";
 import ScrollReveal from "./ScrollReveal";
-
-// Tech icon mapping (using simple SVG or colored dots as visual indicators)
-const categoryIcons: Record<string, string> = {
-  Frontend: "🎨",
-  Backend: "⚙️",
-  Mobile: "📱",
-  "Databases & Cloud": "☁️",
-  "Deployment & Tools": "🚀",
-};
 
 const categoryColors: Record<string, string> = {
   Frontend: "rgba(251, 191, 36, 0.15)",
@@ -29,9 +20,12 @@ const categoryBorderColors: Record<string, string> = {
   "Deployment & Tools": "rgba(244, 63, 94, 0.25)",
 };
 
-void categoryIcons;
-
 export default function TechStack() {
+  const allTechItems = techStack.flatMap((category) => category.items);
+  const familiarTech = allTechItems.filter(
+    (item) => !coreSkills.includes(item) && !currentlyLearning.includes(item)
+  );
+
   return (
     <section id="skills" className="section-padding" style={{ position: "relative", overflow: "hidden" }}>
       {/* Ambient glow */}
@@ -59,7 +53,7 @@ export default function TechStack() {
             className="heading-section"
             style={{
               fontSize: "clamp(2.45rem, 5vw, 4.15rem)",
-              marginBottom: "4.7rem",
+              marginBottom: "3rem",
               maxWidth: "740px",
             }}
           >
@@ -68,22 +62,49 @@ export default function TechStack() {
           </h2>
         </ScrollReveal>
 
-        {/* Tech Categories Grid */}
-        <div className="tech-grid">
+        <ScrollReveal delay={0.15}>
+          <div className="skills-tier-row">
+            <article className="skills-tier-card">
+              <p className="text-label" style={{ marginBottom: "0.45rem" }}>
+                Core Skills
+              </p>
+              <p className="text-body" style={{ fontSize: "0.88rem" }}>
+                {coreSkills.join(" • ")}
+              </p>
+            </article>
+            <article className="skills-tier-card">
+              <p className="text-label" style={{ marginBottom: "0.45rem" }}>
+                Familiar Stack
+              </p>
+              <p className="text-body" style={{ fontSize: "0.88rem" }}>
+                {familiarTech.slice(0, 8).join(" • ")}
+              </p>
+            </article>
+            <article className="skills-tier-card">
+              <p className="text-label" style={{ marginBottom: "0.45rem" }}>
+                Exploring
+              </p>
+              <p className="text-body" style={{ fontSize: "0.88rem" }}>
+                {currentlyLearning.join(" • ")}
+              </p>
+            </article>
+          </div>
+        </ScrollReveal>
+
+        <div className="tech-grid" style={{ marginTop: "1.2rem" }}>
           {techStack.map((category, i) => (
             <ScrollReveal key={category.name} delay={0.1 + i * 0.08}>
               <motion.div
                 className="card"
                 style={{
-                  padding: "1.75rem",
+                  padding: "1.45rem",
                   borderRadius: "20px",
                   height: "100%",
                   transition: "all 0.4s var(--transition-smooth)",
                 }}
                 whileHover={{
-                  y: -8,
-                  scale: 1.025,
-                  transition: { duration: 0.35 },
+                  y: -6,
+                  transition: { duration: 0.28 },
                 }}
               >
                 <div
@@ -136,13 +157,12 @@ export default function TechStack() {
                     <motion.span
                       key={item}
                       whileHover={{
-                        scale: 1.08,
-                        backgroundColor: "var(--color-accent-glow)",
+                        scale: 1.04,
+                        backgroundColor: "rgba(212, 165, 116, 0.12)",
                         color: "var(--color-accent-warm)",
                         borderColor: "rgba(212, 165, 116, 0.4)",
-                        boxShadow: "0 0 10px rgba(212, 165, 116, 0.1)",
                       }}
-                      transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                      transition={{ type: "spring", stiffness: 260, damping: 18 }}
                       style={{
                         padding: "0.45rem 0.9rem",
                         borderRadius: "100px",
@@ -162,99 +182,6 @@ export default function TechStack() {
               </motion.div>
             </ScrollReveal>
           ))}
-
-          {/* Core Skills as a Card */}
-          <ScrollReveal delay={0.1 + techStack.length * 0.08}>
-            <motion.div
-              className="card"
-              style={{
-                padding: "1.75rem",
-                borderRadius: "20px",
-                height: "100%",
-                transition: "all 0.4s var(--transition-smooth)",
-                display: "flex",
-                flexDirection: "column",
-              }}
-              whileHover={{
-                y: -8,
-                scale: 1.025,
-                transition: { duration: 0.35 },
-              }}
-            >
-              <div
-                style={{
-                  width: "38px",
-                  height: "38px",
-                  borderRadius: "14px",
-                  background: "rgba(212, 165, 116, 0.12)",
-                  border: "1px solid rgba(212, 165, 116, 0.25)",
-                  marginBottom: "1.35rem",
-                  display: "grid",
-                  placeItems: "center",
-                }}
-              >
-                <span
-                  aria-hidden="true"
-                  style={{
-                    width: "8px",
-                    height: "8px",
-                    borderRadius: "50%",
-                    background: "var(--color-accent-warm)",
-                    boxShadow: "0 0 18px rgba(212,165,116,0.65)",
-                  }}
-                />
-              </div>
-
-              {/* Category name */}
-              <h3
-                style={{
-                  fontSize: "1rem",
-                  fontWeight: 700,
-                  color: "var(--color-accent-warm)",
-                  marginBottom: "1.15rem",
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                Core Skills
-              </h3>
-
-              {/* Items in bubble format with animations */}
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "0.55rem",
-                }}
-              >
-                {coreSkills.map((skill) => (
-                  <motion.span
-                    key={skill}
-                    whileHover={{
-                      scale: 1.08,
-                      backgroundColor: "var(--color-accent-glow)",
-                      color: "var(--color-accent-warm)",
-                      borderColor: "var(--color-accent-warm)",
-                      boxShadow: "0 0 10px rgba(212, 165, 116, 0.15)",
-                    }}
-                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                    style={{
-                      padding: "0.45rem 0.9rem",
-                      borderRadius: "100px",
-                      fontSize: "0.75rem",
-                      fontWeight: 500,
-                      color: "var(--color-accent-warm)",
-                      background: "rgba(212, 165, 116, 0.05)",
-                      border: "1px solid rgba(212, 165, 116, 0.2)",
-                      cursor: "default",
-                      transition: "border-color 0.3s ease, color 0.3s ease",
-                    }}
-                  >
-                    {skill}
-                  </motion.span>
-                ))}
-              </div>
-            </motion.div>
-          </ScrollReveal>
         </div>
       </div>
     </section>

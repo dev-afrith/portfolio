@@ -47,64 +47,53 @@ export default function Footer() {
 
   return (
     <footer
+      id="footer"
       style={{
         borderTop: "1px solid var(--color-border-subtle)",
-        padding: "1.65rem 2rem",
+        padding: "2rem 1.2rem",
         position: "relative",
-        background: "linear-gradient(180deg, rgba(255,255,255,0.018), rgba(0,0,0,0.18))",
+        background: "linear-gradient(180deg, rgba(255,255,255,0.018), rgba(0,0,0,0.22))",
       }}
     >
       <div
         className="content-container"
         style={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: "stretch",
           width: "100%",
-          flexWrap: "wrap",
-          gap: "1.5rem",
+          gap: "1.2rem",
         }}
       >
-        {/* Full Name Logo with Effects */}
-        <a
-          href="#"
-          style={{
-            fontWeight: 700,
-            fontSize: "1rem",
-            color: "var(--color-text-primary)",
-            textDecoration: "none",
-            letterSpacing: "-0.02em",
-            transition: "all 0.3s var(--transition-smooth)",
-            display: "inline-block",
-            textShadow: "0 0 24px rgba(212,165,116,0.12)",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = "var(--color-accent-warm)";
-            e.currentTarget.style.transform = "scale(1.05)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = "var(--color-text-primary)";
-            e.currentTarget.style.transform = "scale(1)";
-          }}
-        >
-          {personalInfo.name}
-        </a>
+        <div className="footer-top-row">
+          <div>
+            <a href="#hero" className="footer-brand-link">
+              {personalInfo.name}
+            </a>
+            <p className="text-body" style={{ fontSize: "0.88rem", maxWidth: "520px", marginTop: "0.6rem" }}>
+              Building premium, scalable digital products with modern full-stack and mobile technologies.
+            </p>
+          </div>
 
-        {/* Center: Copyright */}
-        <p
-          style={{
-            fontSize: "0.75rem",
-            color: "var(--color-text-tertiary)",
-            letterSpacing: "0.02em",
-            margin: 0,
-          }}
-        >
-          © {currentYear} {personalInfo.name}. All rights reserved.
-        </p>
+          <a href="#contact" className="btn-secondary" style={{ alignSelf: "flex-start", textDecoration: "none" }}>
+            Start a Conversation
+          </a>
+        </div>
 
-        {/* Right Side: Social Links */}
-        <div style={{ display: "flex", gap: "0.75rem" }}>
+        <div className="footer-bottom-row">
+          <p
+            style={{
+              fontSize: "0.75rem",
+              color: "var(--color-text-tertiary)",
+              letterSpacing: "0.02em",
+              margin: 0,
+            }}
+          >
+            © {currentYear} {personalInfo.name}. All rights reserved.
+          </p>
+
+          <div style={{ display: "flex", gap: "0.75rem" }}>
           {socialLinks.map((link) => (
             <a
               key={link.label}
@@ -141,18 +130,9 @@ export default function Footer() {
               {link.icon}
             </a>
           ))}
+          </div>
         </div>
       </div>
-      <style jsx global>{`
-        @media (max-width: 768px) {
-          footer .content-container {
-            flex-direction: column !important;
-            text-align: center;
-            justify-content: center !important;
-            gap: 1rem !important;
-          }
-        }
-      `}</style>
     </footer>
   );
 }

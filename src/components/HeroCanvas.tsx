@@ -3,16 +3,16 @@
 import { useRef, useMemo, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useReducedMotion } from "framer-motion";
 
 function seededParticleValue(index: number, axis: number) {
   const x = Math.sin(index * 12.9898 + axis * 78.233) * 43758.5453;
   return (x - Math.floor(x) - 0.5) * 20;
 }
 
-function ParticleField() {
+function ParticleField({ count }: { count: number }) {
   const meshRef = useRef<THREE.Points>(null);
   const geoRef = useRef<THREE.BufferGeometry>(null);
-  const count = 1500;
 
   const positions = useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -22,7 +22,7 @@ function ParticleField() {
       pos[i * 3 + 2] = seededParticleValue(i, 2);
     }
     return pos;
-  }, []);
+  }, [count]);
 
   useEffect(() => {
     if (geoRef.current) {
@@ -69,15 +69,24 @@ function ParticleField() {
 }
 
 export default function HeroCanvas() {
+  const reduceMotion = useReducedMotion();
+  const isSmallViewport = typeof window !== "undefined" && window.innerWidth < 768;
+
+  if (reduceMotion) {
+    return null;
+  }
+
+  const particleCount = isSmallViewport ? 540 : 980;
+
   return (
     <div className="hero-canvas-wrapper">
       <Canvas
         camera={{ position: [0, 0, 5], fov: 75 }}
         style={{ background: "transparent" }}
-        dpr={[1, 1.5]}
-        gl={{ antialias: false, alpha: true }}
+        dpr={[1, 1.25]}
+        gl={{ antialias: false, alpha: true, powerPreference: "low-power" }}
       >
-        <ParticleField />
+        <ParticleField count={particleCount} />
         <ambientLight intensity={0.1} />
       </Canvas>
     </div>

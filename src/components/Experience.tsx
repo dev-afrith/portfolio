@@ -31,7 +31,7 @@ export default function Experience() {
             className="heading-section"
             style={{
               fontSize: "clamp(2.45rem, 5vw, 4.15rem)",
-              marginBottom: "4.6rem",
+              marginBottom: "3.4rem",
               maxWidth: "760px",
             }}
           >
@@ -42,19 +42,20 @@ export default function Experience() {
 
         {/* Experience Cards Grid */}
         <div
+          className="experience-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: "2.25rem",
+            gap: "1.2rem",
             alignItems: "stretch",
           }}
         >
           {experiences.map((exp, i) => (
             <ScrollReveal key={exp.id} delay={0.15 + i * 0.15}>
               <div
-                className="card"
+                className="card experience-card"
                 style={{
-                  padding: "2.65rem",
+                  padding: "2rem",
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
@@ -63,40 +64,68 @@ export default function Experience() {
                 }}
               >
                 <div>
-                  {/* Period */}
                   <p
                     style={{
-                      fontSize: "0.75rem",
+                      fontSize: "0.7rem",
                       color: "var(--color-accent-warm)",
                       fontWeight: 700,
-                      letterSpacing: "0.08em",
-                      marginBottom: "0.75rem",
+                      letterSpacing: "0.1em",
+                      marginBottom: "0.6rem",
                       textTransform: "uppercase",
                     }}
                   >
                     {exp.period}
                   </p>
 
-                  {/* Role */}
                   <h3
                     className="heading-section"
-                    style={{ fontSize: "1.45rem", marginBottom: "0.35rem" }}
+                    style={{ fontSize: "1.32rem", marginBottom: "0.35rem" }}
                   >
                     {exp.role}
                   </h3>
 
-                  {/* Company */}
                   <p
                     style={{
-                      fontSize: "0.875rem",
+                      fontSize: "0.84rem",
                       color: "var(--color-text-secondary)",
-                      marginBottom: "1.55rem",
+                      marginBottom: "1.15rem",
                     }}
                   >
                     {exp.company}
                   </p>
 
-                  {/* Description */}
+                  <div
+                    style={{
+                      marginBottom: "1.25rem",
+                    }}
+                  >
+                    <span
+                      style={{
+                        padding: "0.32rem 0.8rem",
+                        borderRadius: "100px",
+                        fontSize: "0.64rem",
+                        fontWeight: 600,
+                        color:
+                          exp.type === "development"
+                            ? "rgb(16, 185, 129)"
+                            : "rgb(96, 165, 250)",
+                        background:
+                          exp.type === "development"
+                            ? "rgba(16, 185, 129, 0.1)"
+                            : "rgba(96, 165, 250, 0.1)",
+                        border: `1px solid ${
+                          exp.type === "development"
+                            ? "rgba(16, 185, 129, 0.2)"
+                            : "rgba(96, 165, 250, 0.2)"
+                        }`,
+                        letterSpacing: "0.05em",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {exp.type}
+                    </span>
+                  </div>
+
                   <ul
                     style={{
                       listStyle: "none",
@@ -132,35 +161,6 @@ export default function Experience() {
                       </li>
                     ))}
                   </ul>
-                </div>
-
-                {/* Type badge */}
-                <div style={{ marginTop: "2rem" }}>
-                  <span
-                    style={{
-                      padding: "0.35rem 0.9rem",
-                      borderRadius: "100px",
-                      fontSize: "0.65rem",
-                      fontWeight: 600,
-                      color:
-                        exp.type === "development"
-                          ? "rgb(16, 185, 129)"
-                          : "rgb(96, 165, 250)",
-                      background:
-                        exp.type === "development"
-                          ? "rgba(16, 185, 129, 0.1)"
-                          : "rgba(96, 165, 250, 0.1)",
-                      border: `1px solid ${
-                        exp.type === "development"
-                          ? "rgba(16, 185, 129, 0.2)"
-                          : "rgba(96, 165, 250, 0.2)"
-                      }`,
-                      letterSpacing: "0.05em",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {exp.type}
-                  </span>
                 </div>
               </div>
             </ScrollReveal>

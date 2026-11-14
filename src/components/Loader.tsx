@@ -8,7 +8,7 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    const duration = 2200;
+    const duration = 1100;
     const interval = 20;
     const steps = duration / interval;
     let current = 0;
@@ -20,8 +20,8 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
         clearInterval(timer);
         setTimeout(() => {
           setIsExiting(true);
-          setTimeout(onComplete, 800);
-        }, 300);
+          setTimeout(onComplete, 450);
+        }, 150);
       }
       setProgress(Math.min(current, 100));
     }, interval);

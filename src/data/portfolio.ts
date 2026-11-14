@@ -21,6 +21,7 @@ export interface Project {
   id: string;
   title: string;
   github: string;
+  liveDemo?: string;
   description: string;
   longDescription: string;
   techStack: string[];

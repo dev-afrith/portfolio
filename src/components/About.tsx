@@ -1,14 +1,15 @@
 "use client";
 
-import { personalInfo } from "@/data/portfolio";
+import { experiences, personalInfo, projects, techStack } from "@/data/portfolio";
 import ScrollReveal from "./ScrollReveal";
 
 export default function About() {
+  const uniqueTechCount = new Set(techStack.flatMap((category) => category.items)).size;
   const stats = [
-    { label: "Projects Built", value: "5+" },
-    { label: "Technologies", value: "15+" },
-    { label: "Internships", value: "2" },
-    { label: "Platforms", value: "Web & Mobile" },
+    { label: "Projects", value: `${projects.length}` },
+    { label: "Technologies", value: `${uniqueTechCount}+` },
+    { label: "Experience Entries", value: `${experiences.length}` },
+    { label: "Location", value: personalInfo.location.split(",")[0] },
   ];
 
   return (
@@ -39,7 +40,7 @@ export default function About() {
             className="heading-section"
             style={{
               fontSize: "clamp(2.45rem, 5vw, 4.15rem)",
-              marginBottom: "3.4rem",
+              marginBottom: "2.8rem",
               maxWidth: "880px",
             }}
           >
@@ -50,22 +51,23 @@ export default function About() {
           </h2>
         </ScrollReveal>
 
-        {/* Two-column layout */}
         <div
+          className="about-layout"
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr",
-            gap: "4.5rem",
+            gridTemplateColumns: "1.35fr 1fr",
+            gap: "1.2rem",
           }}
         >
-          {/* Text */}
           <div
             className="premium-panel"
             style={{
               padding: "clamp(1.5rem, 4vw, 3.2rem)",
-              maxWidth: "850px",
             }}
           >
+            <p className="text-label" style={{ marginBottom: "1rem" }}>
+              Who I Am
+            </p>
             {personalInfo.about.map((para, i) => (
               <ScrollReveal key={i} delay={0.15 + i * 0.1}>
                 <p
@@ -81,17 +83,43 @@ export default function About() {
               </ScrollReveal>
             ))}
           </div>
+
+          <div className="about-side-grid">
+            <ScrollReveal delay={0.18}>
+              <article className="about-bento-card">
+                <p className="text-label" style={{ marginBottom: "0.8rem" }}>
+                  Current Focus
+                </p>
+                <h3 className="heading-section" style={{ fontSize: "1.2rem", marginBottom: "0.55rem" }}>
+                  {personalInfo.role}
+                </h3>
+                <p className="text-body" style={{ fontSize: "0.92rem" }}>
+                  {personalInfo.motto}
+                </p>
+              </article>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.22}>
+              <article className="about-bento-card">
+                <p className="text-label" style={{ marginBottom: "0.8rem" }}>
+                  Portfolio Direction
+                </p>
+                <p className="text-body" style={{ fontSize: "0.92rem" }}>
+                  Product-first development focused on maintainable code, polished UX, and scalable delivery.
+                </p>
+              </article>
+            </ScrollReveal>
+          </div>
         </div>
 
-        {/* Stats */}
         <ScrollReveal delay={0.4}>
           <div
             className="about-stats-grid"
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(2, 1fr)",
-              gap: "1.5rem",
-              marginTop: "4.5rem",
+              gap: "1rem",
+              marginTop: "2.8rem",
             }}
           >
             {stats.map((stat) => (
@@ -99,17 +127,17 @@ export default function About() {
                 key={stat.label}
                 className="glass"
                 style={{
-                  padding: "1.85rem 1.25rem",
-                  borderRadius: "20px",
-                  textAlign: "center",
+                  padding: "1.35rem 1.1rem",
+                  borderRadius: "16px",
+                  textAlign: "left",
                 }}
               >
                 <p
                   className="heading-section"
                   style={{
-                    fontSize: "2.05rem",
+                    fontSize: "1.55rem",
                     color: "var(--color-accent-warm)",
-                    marginBottom: "0.35rem",
+                    marginBottom: "0.15rem",
                     textShadow: "0 0 30px rgba(212,165,116,0.22)",
                   }}
                 >

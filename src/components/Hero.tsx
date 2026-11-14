@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { personalInfo } from "@/data/portfolio";
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
+import { coreSkills, personalInfo } from "@/data/portfolio";
 import dynamic from "next/dynamic";
 
 const HeroCanvas = dynamic(() => import("./HeroCanvas"), {
@@ -10,6 +10,7 @@ const HeroCanvas = dynamic(() => import("./HeroCanvas"), {
 });
 
 export default function Hero() {
+  const reduceMotion = useReducedMotion();
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const smoothX = useSpring(mouseX, { stiffness: 90, damping: 24, mass: 0.4 });
@@ -27,19 +28,19 @@ export default function Hero() {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.13,
-        delayChildren: 0.25,
+        staggerChildren: reduceMotion ? 0 : 0.11,
+        delayChildren: reduceMotion ? 0 : 0.18,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 34, filter: "blur(10px)" },
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 26, filter: reduceMotion ? "blur(0px)" : "blur(10px)" },
     visible: {
       opacity: 1,
       y: 0,
       filter: "blur(0px)",
-      transition: { duration: 1, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+      transition: { duration: reduceMotion ? 0.25 : 0.9, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
     },
   };
 
@@ -47,6 +48,7 @@ export default function Hero() {
     <section
       id="hero"
       onMouseMove={(event) => {
+        if (reduceMotion) return;
         const rect = event.currentTarget.getBoundingClientRect();
         mouseX.set((event.clientX - rect.left) / rect.width - 0.5);
         mouseY.set((event.clientY - rect.top) / rect.height - 0.5);
@@ -68,11 +70,11 @@ export default function Hero() {
       <motion.div
         className="gradient-orb"
         style={{
-          x: glowX,
-          y: glowY,
+          x: reduceMotion ? 0 : glowX,
+          y: reduceMotion ? 0 : glowY,
           width: "780px",
           height: "780px",
-          background: "radial-gradient(circle, rgba(212,165,116,0.13), rgba(212,165,116,0.045) 36%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(212,165,116,0.12), rgba(212,165,116,0.04) 34%, transparent 70%)",
           top: "11%",
           left: "50%",
           transform: "translateX(-50%)",
@@ -83,11 +85,11 @@ export default function Hero() {
         style={{
           width: "600px",
           height: "600px",
-          background: "radial-gradient(circle, rgba(255,216,165,0.1), transparent 70%)",
+          background: "radial-gradient(circle, rgba(255,216,165,0.08), transparent 70%)",
           top: "15%",
           right: "-12%",
-          x: rightOrbX,
-          y: rightOrbY,
+          x: reduceMotion ? 0 : rightOrbX,
+          y: reduceMotion ? 0 : rightOrbY,
         }}
       />
       <motion.div
@@ -98,8 +100,8 @@ export default function Hero() {
           background: "radial-gradient(circle, rgba(212,165,116,0.08), transparent 70%)",
           bottom: "6%",
           left: "-8%",
-          x: leftOrbX,
-          y: leftOrbY,
+          x: reduceMotion ? 0 : leftOrbX,
+          y: reduceMotion ? 0 : leftOrbY,
         }}
       />
 
@@ -122,50 +124,40 @@ export default function Hero() {
           className="text-label section-kicker"
           style={{ marginBottom: "1.75rem", justifyContent: "center" }}
         >
-          Full Stack Developer &bull; Mobile App Developer
+          {personalInfo.role}
         </motion.p>
 
-        {/* Name (Letter-by-Letter interactive animations) */}
         <motion.h1
           variants={itemVariants}
           className="heading-display"
           style={{
-            x: titleX,
-            y: titleY,
-            fontSize: "clamp(3.4rem, 10.5vw, 8.7rem)",
-            marginBottom: "1.65rem",
+            x: reduceMotion ? 0 : titleX,
+            y: reduceMotion ? 0 : titleY,
+            fontSize: "clamp(3.1rem, 10vw, 8rem)",
+            marginBottom: "1.1rem",
             cursor: "default",
             position: "relative",
             textWrap: "balance",
-            filter: "drop-shadow(0 22px 60px rgba(212, 165, 116, 0.16))",
+            filter: "drop-shadow(0 18px 48px rgba(212, 165, 116, 0.14))",
+            maxWidth: "13ch",
+            marginInline: "auto",
           }}
         >
-          {personalInfo.name.split(" ").map((word, wordIdx) => (
-            <span key={wordIdx} style={{ display: "inline-block", whiteSpace: "nowrap" }}>
-              {word.split("").map((letter, letterIdx) => (
-                <motion.span
-                  key={letterIdx}
-                  style={{
-                    display: "inline-block",
-                    color: "#f5e6d3",
-                    transition: "color 0.25s var(--transition-smooth)",
-                  }}
-                  whileHover={{
-                    color: "#ffc984",
-                    scale: 1.18,
-                    y: -8,
-                    textShadow: "0 0 34px rgba(255, 201, 132, 0.74)",
-                  }}
-                >
-                  {letter}
-                </motion.span>
-              ))}
-              {wordIdx < personalInfo.name.split(" ").length - 1 && (
-                <span style={{ display: "inline-block" }}>&nbsp;</span>
-              )}
-            </span>
-          ))}
+          {personalInfo.name}
         </motion.h1>
+
+        <motion.p
+          variants={itemVariants}
+          className="heading-section"
+          style={{
+            fontSize: "clamp(1.12rem, 2.2vw, 1.55rem)",
+            color: "var(--color-accent-warm)",
+            marginBottom: "1.2rem",
+            letterSpacing: "-0.02em",
+          }}
+        >
+          Full-stack products with premium interfaces and scalable engineering.
+        </motion.p>
 
         {/* Tagline */}
         <motion.p
@@ -173,14 +165,32 @@ export default function Hero() {
           className="text-body"
           style={{
             maxWidth: "720px",
-            margin: "0 auto 3.25rem",
-            fontSize: "clamp(1rem, 1.35vw, 1.22rem)",
-            lineHeight: 1.85,
+            margin: "0 auto 2rem",
+            fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
+            lineHeight: 1.8,
             color: "rgba(245, 245, 247, 0.72)",
           }}
         >
           {personalInfo.heroTagline}
         </motion.p>
+
+        <motion.div
+          variants={itemVariants}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            gap: "0.55rem",
+            marginBottom: "2.5rem",
+          }}
+          aria-label="Core technical interests"
+        >
+          {coreSkills.slice(0, 4).map((skill) => (
+            <span key={skill} className="hero-pill">
+              {skill}
+            </span>
+          ))}
+        </motion.div>
 
         {/* CTA Buttons */}
         <motion.div
@@ -224,7 +234,7 @@ export default function Hero() {
             <span>Resume</span>
           </a>
           <a href="#contact" className="btn-secondary magnetic-target">
-            <span>Contact Me</span>
+            <span>Let&apos;s Connect</span>
           </a>
         </motion.div>
 

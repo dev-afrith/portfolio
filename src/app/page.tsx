@@ -13,9 +13,15 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => {
+    if (typeof window === "undefined") return true;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const hasLoadedOnce = sessionStorage.getItem("portfolio-loader-complete") === "1";
+    return !(reduceMotion || hasLoadedOnce);
+  });
 
   const handleLoadComplete = useCallback(() => {
+    sessionStorage.setItem("portfolio-loader-complete", "1");
     setIsLoading(false);
   }, []);
 

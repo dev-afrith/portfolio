@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { projects } from "@/data/portfolio";
 import ScrollReveal from "./ScrollReveal";
 import ProjectModal from "./ProjectModal";
@@ -9,8 +10,21 @@ import type { Project } from "@/data/portfolio";
 
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const lastTriggerRef = useRef<HTMLElement | null>(null);
 
   const displayedProjects = projects;
+
+  const openProject = (project: Project, trigger: HTMLElement) => {
+    lastTriggerRef.current = trigger;
+    setSelectedProject(project);
+  };
+
+  const closeProject = () => {
+    setSelectedProject(null);
+    window.requestAnimationFrame(() => {
+      lastTriggerRef.current?.focus();
+    });
+  };
 
   return (
     <section id="projects" className="section-padding" style={{ position: "relative", overflow: "hidden" }}>
@@ -71,62 +85,59 @@ export default function Projects() {
         <div className="grid-projects">
           {displayedProjects.map((project, i) => (
             <ScrollReveal key={project.id} delay={0.1 + i * 0.1}>
-              <motion.div
-                className="card"
+              <motion.article
+                className="card project-card"
                 style={{
                   cursor: "pointer",
                   position: "relative",
-                  height: "100%",
-                  minHeight: "460px",
+                  minHeight: "500px",
                   display: "flex",
                   flexDirection: "column",
                 }}
+                tabIndex={0}
+                role="button"
+                aria-label={`Open details for ${project.title}`}
                 onMouseMove={(event) => {
                   const rect = event.currentTarget.getBoundingClientRect();
                   event.currentTarget.style.setProperty("--mouse-x", `${event.clientX - rect.left}px`);
                   event.currentTarget.style.setProperty("--mouse-y", `${event.clientY - rect.top}px`);
                 }}
+                onClick={(event) => openProject(project, event.currentTarget)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    openProject(project, event.currentTarget);
+                  }
+                }}
                 whileHover="hover"
                 variants={{
                   hover: {
-                    y: -14,
-                    scale: 1.018,
-                    rotateX: 1.5,
-                    rotateY: -1.5,
-                    boxShadow: "0 36px 90px rgba(0,0,0,0.55), 0 0 54px rgba(212, 165, 116, 0.18)",
+                    y: -10,
+                    scale: 1.012,
+                    boxShadow: "0 30px 90px rgba(0,0,0,0.52), 0 0 48px rgba(212, 165, 116, 0.14)",
                   }
                 }}
-                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                onClick={() => setSelectedProject(project)}
+                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
               >
-                {/* Project Image Header */}
-                <div
-                  style={{
-                    height: "250px",
-                    position: "relative",
-                    overflow: "hidden",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderBottom: "1px solid rgba(255,255,255,0.07)",
-                  }}
-                >
-                  {/* Real Image of the project name */}
-                  <motion.img
-                    src={`/projects/${project.id}.png`}
-                    alt={project.title}
+                <div className="project-card-media" aria-hidden="true">
+                  <motion.div
                     variants={{
-                      hover: { scale: 1.09, y: -5 }
+                      hover: { scale: 1.06, y: -4 }
                     }}
-                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      filter: "saturate(1.05) contrast(1.05)",
-                    }}
-                  />
-                  {/* Dark gradient overlay to ensure category badge is legible */}
+                    transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ position: "absolute", inset: 0 }}
+                  >
+                    <Image
+                      src={`/projects/${project.id}.png`}
+                      alt={project.title}
+                      fill
+                      sizes="(max-width: 767px) 100vw, 50vw"
+                      style={{
+                        objectFit: "cover",
+                        filter: "saturate(1.05) contrast(1.03)",
+                      }}
+                    />
+                  </motion.div>
                   <div
                     style={{
                       position: "absolute",
@@ -149,7 +160,6 @@ export default function Projects() {
                     }}
                   />
 
-                  {/* Category badge */}
                   <span
                     className="glass"
                     style={{
@@ -170,17 +180,14 @@ export default function Projects() {
                   >
                     {project.category}
                   </span>
-
-                  {/* Removed featured badge */}
                 </div>
 
-                {/* Card content */}
-                <div style={{ padding: "2rem", flex: 1 }}>
+                <div className="project-card-content">
                   <h3
                     className="heading-section"
                     style={{
-                      fontSize: "1.45rem",
-                      marginBottom: "0.85rem",
+                      fontSize: "1.38rem",
+                      marginBottom: "0.7rem",
                     }}
                   >
                     {project.title}
@@ -189,14 +196,13 @@ export default function Projects() {
                     className="text-body"
                     style={{
                       fontSize: "0.92rem",
-                      marginBottom: "1.5rem",
-                      lineHeight: 1.75,
+                      marginBottom: "1.35rem",
+                      lineHeight: 1.7,
                     }}
                   >
                     {project.description}
                   </p>
 
-                  {/* Tech tags */}
                   <div style={{ display: "flex", gap: "0.45rem", flexWrap: "wrap" }}>
                     {project.techStack.slice(0, 3).map((tech) => (
                       <span
@@ -232,21 +238,18 @@ export default function Projects() {
                   </div>
                 </div>
 
-                {/* Bottom bar with action links */}
                 <div
+                  className="project-card-footer"
                   style={{
-                    padding: "1.15rem 2rem",
-                    borderTop: "1px solid var(--color-border-subtle)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    gap: "1rem",
-                    background: "rgba(0,0,0,0.14)",
+                    gap: "0.9rem",
                   }}
-                  onClick={(e) => e.stopPropagation()} // Prevent card click propagation
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <button
-                    onClick={() => setSelectedProject(project)}
+                    onClick={(event) => openProject(project, event.currentTarget)}
                     style={{
                       background: "none",
                       border: "none",
@@ -282,43 +285,28 @@ export default function Projects() {
                     </motion.svg>
                   </button>
 
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      fontSize: "0.75rem",
-                      fontWeight: 500,
-                      color: "var(--color-text-secondary)",
-                      textDecoration: "none",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.35rem",
-                      transition: "color 0.3s ease",
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-accent-warm)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-text-secondary)")}
-                  >
-                    <motion.svg
-                      variants={{
-                        hover: { rotate: 8, scale: 1.1 }
-                      }}
-                      transition={{ duration: 0.3, ease: "easeOut" }}
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.9rem" }}>
+                    {project.liveDemo && (
+                      <a
+                        href={project.liveDemo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="project-link"
+                      >
+                        Live
+                      </a>
+                    )}
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="project-link"
                     >
-                      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                    </motion.svg>
-                    <span>View on GitHub</span>
-                  </a>
+                      GitHub
+                    </a>
+                  </div>
                 </div>
-              </motion.div>
+              </motion.article>
             </ScrollReveal>
           ))}
         </div>
@@ -328,7 +316,7 @@ export default function Projects() {
       <ProjectModal
         project={selectedProject}
         isOpen={!!selectedProject}
-        onClose={() => setSelectedProject(null)}
+        onClose={closeProject}
       />
     </section>
   );
