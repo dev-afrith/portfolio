@@ -1,0 +1,48 @@
+name: apply-patch-v2
+
+# v2 — applies portfolio-update-2026-11-22.patch to main.
+# Fails loudly if the patch is missing or does not apply — the previous
+# version of this file reported success even when `git am` failed.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Check the patch is present
+        run: |
+          set -euo pipefail
+          PATCH="portfolio-update-2026-11-22.patch"
+          ls -l "$PATCH"
+          SIZE=$(wc -c < "$PATCH")
+          echo "patch size: $SIZE bytes"
+          if [ "$SIZE" -lt 1000000 ]; then
+            echo "::error::$PATCH is only $SIZE bytes — that is an old patch. Upload the 1.9 MB file."
+            exit 1
+          fi
+
+      - name: Apply patch
+        run: |
+          set -euo pipefail
+          git am --3way portfolio-update-2026-11-22.patch
+          git log --oneline -6
+
+      - name: Push to main
+        run: |
+          set -euo pipefail
+          git push origin HEAD:main
+          echo "Pushed. Vercel will start a production build."
