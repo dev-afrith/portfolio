@@ -1468,3 +1468,71 @@ footer {
   display: block;
   margin-top: 0.15rem;
 }
+
+/* Phone card: value only, with a Call / Mobile popover */
+.contact-phone-wrap {
+  position: relative;
+}
+
+.contact-info-button {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.contact-info-caret {
+  margin-left: auto;
+  font-size: 0.95rem;
+  color: var(--color-text-tertiary);
+  transition: transform 0.25s var(--transition-smooth);
+}
+
+.contact-info-button[aria-expanded="true"] .contact-info-caret {
+  transform: rotate(180deg);
+  color: var(--color-accent-warm);
+}
+
+.contact-info-card .contact-info-value {
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.phone-actions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 6;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 14px;
+  background: #141416;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 26px 60px -24px #000;
+}
+
+.phone-actions a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.72rem 0.5rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.phone-actions a:hover {
+  border-color: rgba(212, 165, 116, 0.45);
+  background: rgba(212, 165, 116, 0.12);
+  color: var(--color-accent-warm);
+}
