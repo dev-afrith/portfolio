@@ -308,6 +308,17 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
               </div>
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
+                {project.apk && (
+                  <a
+                    href={project.apk}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <span>Download APK</span>
+                  </a>
+                )}
                 {project.liveDemo && (
                   <a
                     href={project.liveDemo}

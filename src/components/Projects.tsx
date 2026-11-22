@@ -286,6 +286,17 @@ export default function Projects() {
                   </button>
 
                   <div style={{ display: "flex", alignItems: "center", gap: "0.9rem" }}>
+                    {project.apk && (
+                      <a
+                        href={project.apk}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="project-link"
+                        aria-label={`Download the ${project.title} APK`}
+                      >
+                        APK
+                      </a>
+                    )}
                     {project.liveDemo && (
                       <a
                         href={project.liveDemo}

@@ -29,6 +29,7 @@ export interface Project {
   featured: boolean;
   category: string;
   gradient: string;
+  apk?: string;
 }
 
 export const projects: Project[] = [
@@ -51,7 +52,28 @@ export const projects: Project[] = [
     featured: true,
     category: "Full Stack",
     gradient: "from-red-500/20 to-rose-600/20",
-  },
+  }
+,
+  {
+    id: "skillsync",
+    title: "SkillSync",
+    github: "https://github.com/dev-afrith/Skill_Sync",
+    description:
+      "A collaboration platform for skill-sharing with product design thinking at its core.",
+    longDescription:
+      "SkillSync is a full-stack collaboration system designed with product thinking and user-focused workflows. It enables meaningful skill exchange through thoughtful UI/UX and robust backend integration.",
+    techStack: ["React.js", "Node.js", "Express.js", "MongoDB", "Tailwind CSS"],
+    highlights: [
+      "Collaboration systems",
+      "Product design thinking",
+      "Full-stack integration",
+      "User-focused workflows",
+    ],
+    featured: true,
+    category: "Full Stack",
+    gradient: "from-cyan-500/20 to-blue-600/20",
+  }
+,
   {
     id: "foodbridge",
     title: "FoodBridge",
@@ -71,26 +93,8 @@ export const projects: Project[] = [
     featured: true,
     category: "Frontend",
     gradient: "from-emerald-500/20 to-lime-600/20",
-  },
-  {
-    id: "bizgenie-ai",
-    title: "BizGenie AI",
-    github: "https://github.com/dev-afrith/bizgenie-ai",
-    description:
-      "A multi-agent AI platform for business research, market analysis and document intelligence.",
-    longDescription:
-      "BizGenie AI coordinates specialised agents over Google's Gemini API with CrewAI and LangChain. Agents research a business, run market analysis (SWOT, competitors, opportunities) and answer questions over uploaded PDF, DOCX and XLSX files through a ChromaDB-backed RAG pipeline. Output lands as PDF/DOCX reports or PPTX decks. FastAPI backend, PostgreSQL storage, React front end, Dockerised for deployment.",
-    techStack: ["React", "FastAPI", "CrewAI", "LangChain", "Gemini API", "PostgreSQL", "ChromaDB", "Docker"],
-    highlights: [
-      "Multi-agent research and market analysis",
-      "RAG over PDF, DOCX and XLSX documents",
-      "Automated reports and slide decks",
-      "Dockerised FastAPI + React architecture",
-    ],
-    featured: false,
-    category: "AI / Web App",
-    gradient: "from-violet-500/20 to-indigo-600/20",
-  },
+  }
+,
   {
     id: "tikizaya",
     title: "Tikizaya",
@@ -111,45 +115,8 @@ export const projects: Project[] = [
     featured: true,
     category: "Mobile App",
     gradient: "from-amber-500/20 to-orange-600/20",
-  },
-  {
-    id: "skillsync",
-    title: "SkillSync",
-    github: "https://github.com/dev-afrith/Skill_Sync",
-    description:
-      "A collaboration platform for skill-sharing with product design thinking at its core.",
-    longDescription:
-      "SkillSync is a full-stack collaboration system designed with product thinking and user-focused workflows. It enables meaningful skill exchange through thoughtful UI/UX and robust backend integration.",
-    techStack: ["React.js", "Node.js", "Express.js", "MongoDB", "Tailwind CSS"],
-    highlights: [
-      "Collaboration systems",
-      "Product design thinking",
-      "Full-stack integration",
-      "User-focused workflows",
-    ],
-    featured: true,
-    category: "Full Stack",
-    gradient: "from-cyan-500/20 to-blue-600/20",
-  },
-  {
-    id: "ridegram",
-    title: "Ridegram",
-    github: "https://github.com/dev-afrith/ridegram",
-    description:
-      "A modern ride-sharing concept application with sleek interface design and real-time features.",
-    longDescription:
-      "Ridegram is a ride-sharing application concept that combines clean UI design with practical transportation features. Built to showcase mobile-first design patterns and real-time data handling.",
-    techStack: ["React Native", "Node.js", "MongoDB", "REST APIs"],
-    highlights: [
-      "Mobile-first design",
-      "Real-time features",
-      "Clean interface",
-      "Transportation tech",
-    ],
-    featured: false,
-    category: "Mobile App",
-    gradient: "from-emerald-500/20 to-teal-600/20",
-  },
+  }
+,
   {
     id: "salary-payroll",
     title: "Salary Payroll Management",
@@ -168,7 +135,89 @@ export const projects: Project[] = [
     featured: false,
     category: "Desktop App",
     gradient: "from-violet-500/20 to-purple-600/20",
-  },
+  }
+,
+  {
+    id: "ibvap",
+    title: "IBVAP",
+    github: "https://github.com/iamasifroshan/IBVAP",
+    description:
+      "An intelligent border video analytics platform that turns existing CCTV into AI monitoring: detection, tracking, alerts and evidence.",
+    longDescription:
+      "IBVAP puts an AI layer over cameras already installed at border outposts. Frames run through OpenCV capture into YOLO person detection and ByteTrack identity tracking, then YuNet face detection and SFace recognition, with EMA smoothing on the boxes. An incident engine scores threats, raises alerts and captures snapshots and clips as evidence into SQLite, while a React console shows live surveillance, known-person profiles and system health over REST and WebSockets. Built for Smart India Hackathon; I contributed the command-centre UI.",
+    techStack: ["React", "TypeScript", "Vite", "FastAPI", "OpenCV", "YOLO", "WebSockets"],
+    highlights: [
+      "YOLO detection with ByteTrack identity tracking",
+      "YuNet + SFace recognition pipeline",
+      "Incident engine with threat scoring and evidence capture",
+      "Live surveillance console with system health",
+    ],
+    featured: true,
+    category: "AI / Security",
+    gradient: "from-slate-500/20 to-red-600/20",
+  }
+,
+  {
+    id: "mars-x",
+    title: "MARS-X",
+    github: "https://github.com/dev-afrith/mars-x",
+    liveDemo: "https://mars-x-nasa.vercel.app/",
+    description:
+      "A Martian exploration console built for NASA Space Apps 2026: 3D terrain, hazard assessment and science-traverse routing.",
+    longDescription:
+      "MARS-X turns raw orbital Mars datasets into a working exploration console. A MapLibre globe runs in areocentric EPSG:104905 coordinates, with fused MGS MOLA (463 m/px) and MRO CTX (20 m/px) elevation driving slope and roughness hazard scoring. Routes are planned with admissible A* pathfinding and multi-stop ATSP optimisation, then intersected with USGS geology and TES thermal inertia layers, while a climatology engine interpolates the Mars Climate Database across solar longitude, latitude, longitude and local solar time. FastAPI backend, Next.js front end, 485 backend tests passing.",
+    techStack: ["Next.js", "TypeScript", "FastAPI", "Python", "MapLibre GL", "Geospatial"],
+    highlights: [
+      "3D Mars globe in areocentric coordinates",
+      "Hazard scoring from fused MOLA + CTX elevation",
+      "A* routing with multi-stop ATSP optimisation",
+      "485 backend tests passing",
+    ],
+    featured: true,
+    category: "Geospatial",
+    gradient: "from-orange-500/20 to-red-600/20",
+  }
+,
+  {
+    id: "bizgenie-ai",
+    title: "BizGenie AI",
+    github: "https://github.com/dev-afrith/bizgenie-ai",
+    description:
+      "A multi-agent AI platform for business research, market analysis and document intelligence.",
+    longDescription:
+      "BizGenie AI coordinates specialised agents over Google's Gemini API with CrewAI and LangChain. Agents research a business, run market analysis (SWOT, competitors, opportunities) and answer questions over uploaded PDF, DOCX and XLSX files through a ChromaDB-backed RAG pipeline. Output lands as PDF/DOCX reports or PPTX decks. FastAPI backend, PostgreSQL storage, React front end, Dockerised for deployment.",
+    techStack: ["React", "FastAPI", "CrewAI", "LangChain", "Gemini API", "PostgreSQL", "ChromaDB", "Docker"],
+    highlights: [
+      "Multi-agent research and market analysis",
+      "RAG over PDF, DOCX and XLSX documents",
+      "Automated reports and slide decks",
+      "Dockerised FastAPI + React architecture",
+    ],
+    featured: false,
+    category: "AI / Web App",
+    gradient: "from-violet-500/20 to-indigo-600/20",
+  }
+,
+  {
+    id: "ridegram",
+    title: "Ridegram",
+    github: "https://github.com/dev-afrith/ridegram",
+    description:
+      "A modern ride-sharing concept application with sleek interface design and real-time features.",
+    longDescription:
+      "Ridegram is a ride-sharing application concept that combines clean UI design with practical transportation features. Built to showcase mobile-first design patterns and real-time data handling.",
+    techStack: ["React Native", "Node.js", "MongoDB", "REST APIs"],
+    highlights: [
+      "Mobile-first design",
+      "Real-time features",
+      "Clean interface",
+      "Transportation tech",
+    ],
+    featured: false,
+    category: "Mobile App",
+    gradient: "from-emerald-500/20 to-teal-600/20",
+  }
+,
   {
     id: "zayathon-ai-debate",
     title: "Zayathon AI Debate",
@@ -189,44 +238,25 @@ export const projects: Project[] = [
     gradient: "from-rose-500/20 to-pink-600/20",
   },
   {
-    id: "mars-x",
-    title: "MARS-X",
-    github: "https://github.com/dev-afrith/mars-x",
-    liveDemo: "https://mars-x-nasa.vercel.app/",
+    id: "notesapp",
+    title: "Notes App",
+    github: "https://github.com/dev-afrith/NotesApp",
+    apk: "https://github.com/dev-afrith/NotesApp/releases/download/v1.0/NotesApp.apk",
     description:
-      "A Martian exploration console built for NASA Space Apps 2026: 3D terrain, hazard assessment and science-traverse routing.",
+      "An Android notes app in Kotlin and Jetpack Compose — pin, search, multi-image notes, offline Room storage.",
     longDescription:
-      "MARS-X turns raw orbital Mars datasets into a working exploration console. A MapLibre globe runs in areocentric EPSG:104905 coordinates, with fused MGS MOLA (463 m/px) and MRO CTX (20 m/px) elevation driving slope and roughness hazard scoring. Routes are planned with admissible A* pathfinding and multi-stop ATSP optimisation, then intersected with USGS geology and TES thermal inertia layers, while a climatology engine interpolates the Mars Climate Database across solar longitude, latitude, longitude and local solar time. FastAPI backend, Next.js front end, 485 backend tests passing.",
-    techStack: ["Next.js", "TypeScript", "FastAPI", "Python", "MapLibre GL", "Geospatial"],
+      "A native Android notes app following clean architecture: MVVM with a Room database, Coroutines and Flow for async work, and Jetpack Compose for the UI. Notes live in a grid, can be pinned, searched by title or content, and deleted with a swipe that offers undo. Each note supports multiple images, the editor opens as a bottom sheet, and the app ships dark by default on Material 3. Install it straight from the APK — no Play Store needed.",
+    techStack: ["Kotlin", "Jetpack Compose", "Room", "MVVM", "Coroutines", "Material 3"],
     highlights: [
-      "3D Mars globe in areocentric coordinates",
-      "Hazard scoring from fused MOLA + CTX elevation",
-      "A* routing with multi-stop ATSP optimisation",
-      "485 backend tests passing",
+      "Offline-first storage with Room",
+      "Search, pinning and undoable swipe-delete",
+      "Multiple images per note",
+      "Signed APK you can sideload",
     ],
-    featured: true,
-    category: "Geospatial",
-    gradient: "from-orange-500/20 to-red-600/20",
-  },
-  {
-    id: "ibvap",
-    title: "IBVAP",
-    github: "https://github.com/iamasifroshan/IBVAP",
-    description:
-      "An intelligent border video analytics platform that turns existing CCTV into AI monitoring: detection, tracking, alerts and evidence.",
-    longDescription:
-      "IBVAP puts an AI layer over cameras already installed at border outposts. Frames run through OpenCV capture into YOLO person detection and ByteTrack identity tracking, then YuNet face detection and SFace recognition, with EMA smoothing on the boxes. An incident engine scores threats, raises alerts and captures snapshots and clips as evidence into SQLite, while a React console shows live surveillance, known-person profiles and system health over REST and WebSockets. Built for Smart India Hackathon; I contributed the command-centre UI.",
-    techStack: ["React", "TypeScript", "Vite", "FastAPI", "OpenCV", "YOLO", "WebSockets"],
-    highlights: [
-      "YOLO detection with ByteTrack identity tracking",
-      "YuNet + SFace recognition pipeline",
-      "Incident engine with threat scoring and evidence capture",
-      "Live surveillance console with system health",
-    ],
-    featured: true,
-    category: "AI / Security",
-    gradient: "from-slate-500/20 to-red-600/20",
-  },
+    featured: false,
+    category: "Android APK",
+    gradient: "from-sky-500/20 to-indigo-600/20",
+  }
 
 ];
 

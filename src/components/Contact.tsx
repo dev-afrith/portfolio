@@ -16,6 +16,7 @@ export default function Contact() {
   });
   const [status, setStatus] = useState<FormStatus>("idle");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -97,35 +98,82 @@ export default function Contact() {
               </ScrollReveal>
             </div>
 
-            <div className="contact-info-grid">
+            <div style={{ display: "grid", gap: "0.75rem" }}>
               <ScrollReveal delay={0.25}>
-                <a href={`mailto:${personalInfo.email}`} className="contact-info-card">
-                  <p className="contact-info-label">Email</p>
-                  <p className="contact-info-value">{personalInfo.email}</p>
-                </a>
-              </ScrollReveal>
-
-              <ScrollReveal delay={0.3}>
-                <a href={`tel:${personalInfo.phone}`} className="contact-info-card">
-                  <p className="contact-info-label">Phone</p>
-                  <p className="contact-info-value">{personalInfo.phone}</p>
-                </a>
-              </ScrollReveal>
-
-              <ScrollReveal delay={0.35}>
-                <a href={personalInfo.github} className="contact-info-card" target="_blank" rel="noopener noreferrer">
-                  <p className="contact-info-label">GitHub</p>
-                  <p className="contact-info-value">dev-afrith</p>
-                </a>
-              </ScrollReveal>
-
-              <ScrollReveal delay={0.4}>
-                <a href={personalInfo.linkedin} className="contact-info-card" target="_blank" rel="noopener noreferrer">
-                  <p className="contact-info-label">LinkedIn</p>
-                  <p className="contact-info-value">muhammad-afrith</p>
-                </a>
+                <button
+                  type="button"
+                  className="contact-cta-box"
+                  onClick={() => setShowContact(true)}
+                  aria-haspopup="dialog"
+                >
+                  <span className="contact-cta-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="4" width="20" height="16" rx="3" />
+                      <path d="m3 7 9 6 9-6" />
+                    </svg>
+                  </span>
+                  <span>
+                    <span className="contact-cta-title">Contact me</span>
+                    <span className="contact-cta-sub">Tap to open email, call or social links</span>
+                  </span>
+                  <span className="contact-cta-arrow" aria-hidden="true">→</span>
+                </button>
               </ScrollReveal>
             </div>
+
+            <AnimatePresence>
+              {showContact && (
+                <motion.div
+                  className="contact-sheet"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={() => setShowContact(false)}
+                >
+                  <motion.div
+                    className="contact-sheet-panel"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Contact options"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: 12, opacity: 0 }}
+                    transition={{ duration: 0.26, ease: [0.16, 1, 0.3, 1] }}
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    <div className="contact-sheet-head">
+                      <p className="text-label" style={{ margin: 0 }}>Contact</p>
+                      <button
+                        type="button"
+                        onClick={() => setShowContact(false)}
+                        aria-label="Close contact options"
+                        className="contact-sheet-close"
+                      >
+                        ×
+                      </button>
+                    </div>
+
+                    <a className="contact-option" href={`mailto:${personalInfo.email}`}>
+                      <span className="contact-option-icon" aria-hidden="true">✉</span>
+                      <span><b>Email</b><small>{personalInfo.email}</small></span>
+                    </a>
+                    <a className="contact-option" href={`tel:${personalInfo.phone}`}>
+                      <span className="contact-option-icon" aria-hidden="true">☎</span>
+                      <span><b>Call</b><small>{personalInfo.phone}</small></span>
+                    </a>
+                    <a className="contact-option" href={personalInfo.github} target="_blank" rel="noopener noreferrer">
+                      <span className="contact-option-icon" aria-hidden="true">◆</span>
+                      <span><b>GitHub</b><small>github.com/dev-afrith</small></span>
+                    </a>
+                    <a className="contact-option" href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer">
+                      <span className="contact-option-icon" aria-hidden="true">in</span>
+                      <span><b>LinkedIn</b><small>Muhammad Afrith</small></span>
+                    </a>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <div style={{ width: "100%" }}>

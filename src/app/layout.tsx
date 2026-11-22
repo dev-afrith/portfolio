@@ -161,7 +161,10 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <meta name="theme-color" content="#0a0a0a" />
       </head>
-      <body style={{ backgroundColor: "#0a0a0a" }}>{children}</body>
+      <body style={{ backgroundColor: "#0a0a0a" }}>
+        <div className="page-aurora" aria-hidden="true" />
+        {children}
+      </body>
     </html>
   );
 }
