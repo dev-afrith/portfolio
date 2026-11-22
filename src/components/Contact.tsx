@@ -1,26 +1,66 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { personalInfo } from "@/data/portfolio";
 import ScrollReveal from "./ScrollReveal";
 
 type FormStatus = "idle" | "sending" | "sent" | "error";
+type FormErrors = Partial<Record<"name" | "email" | "phone" | "subject" | "message", string>>;
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/;
+// 10 digits starting 6-9, optionally prefixed with +91 / 91 / 0
+const PHONE_RE = /^(?:\+?91|0)?[6-9]\d{9}$/;
 
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     subject: "",
     message: "",
   });
+  const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<FormStatus>("idle");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [showContact, setShowContact] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const formRef = useRef<HTMLFormElement | null>(null);
+
+  const setField = (field: keyof typeof formData, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
+  };
+
+  const validate = (): FormErrors => {
+    const next: FormErrors = {};
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+    const phone = formData.phone.replace(/[\s\-().]/g, "").trim();
+    const subject = formData.subject.trim();
+    const message = formData.message.trim();
+
+    if (name.length < 2) next.name = "Please enter your name (at least 2 characters).";
+    if (!email) next.email = "Please enter your email address.";
+    else if (!EMAIL_RE.test(email)) next.email = "That email doesn't look valid — check for a missing @ or domain.";
+    if (phone && !PHONE_RE.test(phone)) next.phone = "Enter a valid 10-digit mobile number, or leave it blank.";
+    if (subject.length < 3) next.subject = "Add a short subject so I know what this is about.";
+    if (message.length < 10) next.message = "Please write at least 10 characters.";
+
+    return next;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const found = validate();
+    setErrors(found);
+    if (Object.keys(found).length > 0) {
+      const first = Object.keys(found)[0];
+      const el = formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`);
+      el?.focus();
+      return;
+    }
+
     setStatus("sending");
 
     try {
@@ -36,7 +76,7 @@ export default function Contact() {
       if (response.ok) {
         setStatus("sent");
         setShowSuccessPopup(true);
-        setFormData({ name: "", email: "", subject: "", message: "" });
+        setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
         setTimeout(() => setShowSuccessPopup(false), 5000);
       } else {
         setStatus("error");
@@ -54,6 +94,9 @@ export default function Contact() {
       setStatus("idle");
     }, 4000);
   };
+
+  const inputClass = (field: keyof FormErrors) =>
+    `form-input${errors[field] ? " input-invalid" : ""}`;
 
   return (
     <section id="contact" className="section-padding" style={{ position: "relative", overflow: "hidden" }}>
@@ -98,87 +141,75 @@ export default function Contact() {
               </ScrollReveal>
             </div>
 
-            <div style={{ display: "grid", gap: "0.75rem" }}>
+            <div className="contact-info-grid">
               <ScrollReveal delay={0.25}>
-                <button
-                  type="button"
-                  className="contact-cta-box"
-                  onClick={() => setShowContact(true)}
-                  aria-haspopup="dialog"
-                >
-                  <span className="contact-cta-icon" aria-hidden="true">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <a href={`mailto:${personalInfo.email}`} className="contact-info-card">
+                  <span className="contact-info-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="2" y="4" width="20" height="16" rx="3" />
                       <path d="m3 7 9 6 9-6" />
                     </svg>
                   </span>
                   <span>
-                    <span className="contact-cta-title">Contact me</span>
-                    <span className="contact-cta-sub">Tap to open email, call or social links</span>
+                    <span className="contact-info-label">Email</span>
+                    <span className="contact-info-value">{personalInfo.email}</span>
                   </span>
-                  <span className="contact-cta-arrow" aria-hidden="true">→</span>
-                </button>
+                </a>
+              </ScrollReveal>
+
+              <ScrollReveal delay={0.3}>
+                <a href={`tel:${personalInfo.phone}`} className="contact-info-card">
+                  <span className="contact-info-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" />
+                    </svg>
+                  </span>
+                  <span>
+                    <span className="contact-info-label">Phone</span>
+                    <span className="contact-info-value">{personalInfo.phone}</span>
+                  </span>
+                </a>
+              </ScrollReveal>
+
+              <ScrollReveal delay={0.35}>
+                <a href={personalInfo.github} className="contact-info-card" target="_blank" rel="noopener noreferrer">
+                  <span className="contact-info-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17 3.4 18 3.7 18 3.7c.6 1.6.2 2.8.1 3.1.8.9 1.2 1.9 1.2 3.2 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5Z" />
+                    </svg>
+                  </span>
+                  <span>
+                    <span className="contact-info-label">GitHub</span>
+                    <span className="contact-info-value">dev-afrith</span>
+                  </span>
+                </a>
+              </ScrollReveal>
+
+              <ScrollReveal delay={0.4}>
+                <a href={personalInfo.linkedin} className="contact-info-card" target="_blank" rel="noopener noreferrer">
+                  <span className="contact-info-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.1a4.2 4.2 0 0 1 3.8-2c4 0 4.8 2.6 4.8 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.2 1.4-2.2 2.9V21h-4V9Z" />
+                    </svg>
+                  </span>
+                  <span>
+                    <span className="contact-info-label">LinkedIn</span>
+                    <span className="contact-info-value">Muhammad Afrith</span>
+                  </span>
+                </a>
               </ScrollReveal>
             </div>
-
-            <AnimatePresence>
-              {showContact && (
-                <motion.div
-                  className="contact-sheet"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  onClick={() => setShowContact(false)}
-                >
-                  <motion.div
-                    className="contact-sheet-panel"
-                    role="dialog"
-                    aria-modal="true"
-                    aria-label="Contact options"
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: 12, opacity: 0 }}
-                    transition={{ duration: 0.26, ease: [0.16, 1, 0.3, 1] }}
-                    onClick={(event) => event.stopPropagation()}
-                  >
-                    <div className="contact-sheet-head">
-                      <p className="text-label" style={{ margin: 0 }}>Contact</p>
-                      <button
-                        type="button"
-                        onClick={() => setShowContact(false)}
-                        aria-label="Close contact options"
-                        className="contact-sheet-close"
-                      >
-                        ×
-                      </button>
-                    </div>
-
-                    <a className="contact-option" href={`mailto:${personalInfo.email}`}>
-                      <span className="contact-option-icon" aria-hidden="true">✉</span>
-                      <span><b>Email</b><small>{personalInfo.email}</small></span>
-                    </a>
-                    <a className="contact-option" href={`tel:${personalInfo.phone}`}>
-                      <span className="contact-option-icon" aria-hidden="true">☎</span>
-                      <span><b>Call</b><small>{personalInfo.phone}</small></span>
-                    </a>
-                    <a className="contact-option" href={personalInfo.github} target="_blank" rel="noopener noreferrer">
-                      <span className="contact-option-icon" aria-hidden="true">◆</span>
-                      <span><b>GitHub</b><small>github.com/dev-afrith</small></span>
-                    </a>
-                    <a className="contact-option" href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer">
-                      <span className="contact-option-icon" aria-hidden="true">in</span>
-                      <span><b>LinkedIn</b><small>Muhammad Afrith</small></span>
-                    </a>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
 
           <div style={{ width: "100%" }}>
             <ScrollReveal delay={0.25}>
-              <form onSubmit={handleSubmit} className="premium-panel" style={{ padding: "clamp(1.35rem, 4vw, 2.4rem)" }}>
+              <form
+                ref={formRef}
+                onSubmit={handleSubmit}
+                noValidate
+                className="premium-panel"
+                style={{ padding: "clamp(1.35rem, 4vw, 2.4rem)" }}
+              >
                 <div className="contact-form-row">
                   <div>
                     <label htmlFor="contact-name" className="contact-label">Name</label>
@@ -186,13 +217,15 @@ export default function Contact() {
                       type="text"
                       name="name"
                       autoComplete="name"
-                      className="form-input"
+                      className={inputClass("name")}
                       placeholder="Your Name"
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      required
+                      onChange={(e) => setField("name", e.target.value)}
+                      aria-invalid={!!errors.name}
+                      aria-describedby={errors.name ? "err-name" : undefined}
                       id="contact-name"
                     />
+                    {errors.name && <p className="form-error" id="err-name">{errors.name}</p>}
                   </div>
 
                   <div>
@@ -201,42 +234,71 @@ export default function Contact() {
                       type="email"
                       name="email"
                       autoComplete="email"
-                      className="form-input"
-                      placeholder="Your Email"
+                      className={inputClass("email")}
+                      placeholder="you@example.com"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      required
+                      onChange={(e) => setField("email", e.target.value)}
+                      aria-invalid={!!errors.email}
+                      aria-describedby={errors.email ? "err-email" : undefined}
                       id="contact-email"
                     />
+                    {errors.email && <p className="form-error" id="err-email">{errors.email}</p>}
                   </div>
                 </div>
 
-                <div style={{ marginBottom: "1.05rem" }}>
-                  <label htmlFor="contact-subject" className="contact-label">Subject</label>
-                  <input
-                    type="text"
-                    name="subject"
-                    className="form-input"
-                    placeholder="What would you like to discuss?"
-                    value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    id="contact-subject"
-                  />
+                <div className="contact-form-row">
+                  <div>
+                    <label htmlFor="contact-phone" className="contact-label">
+                      Mobile <span style={{ opacity: 0.55, textTransform: "none" }}>(optional)</span>
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      autoComplete="tel"
+                      inputMode="tel"
+                      className={inputClass("phone")}
+                      placeholder="+91 98765 43210"
+                      value={formData.phone}
+                      onChange={(e) => setField("phone", e.target.value)}
+                      aria-invalid={!!errors.phone}
+                      aria-describedby={errors.phone ? "err-phone" : undefined}
+                      id="contact-phone"
+                    />
+                    {errors.phone && <p className="form-error" id="err-phone">{errors.phone}</p>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="contact-subject" className="contact-label">Subject</label>
+                    <input
+                      type="text"
+                      name="subject"
+                      className={inputClass("subject")}
+                      placeholder="What would you like to discuss?"
+                      value={formData.subject}
+                      onChange={(e) => setField("subject", e.target.value)}
+                      aria-invalid={!!errors.subject}
+                      aria-describedby={errors.subject ? "err-subject" : undefined}
+                      id="contact-subject"
+                    />
+                    {errors.subject && <p className="form-error" id="err-subject">{errors.subject}</p>}
+                  </div>
                 </div>
 
                 <div style={{ marginBottom: "1.2rem" }}>
                   <label htmlFor="contact-message" className="contact-label">Message</label>
                   <textarea
                     name="message"
-                    className="form-input"
-                    placeholder="Your Message"
+                    className={inputClass("message")}
+                    placeholder="Tell me about the project, the timeline and what you're trying to build."
                     rows={5}
                     value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    required
+                    onChange={(e) => setField("message", e.target.value)}
+                    aria-invalid={!!errors.message}
+                    aria-describedby={errors.message ? "err-message" : undefined}
                     id="contact-message"
                     style={{ resize: "vertical" }}
                   />
+                  {errors.message && <p className="form-error" id="err-message">{errors.message}</p>}
                 </div>
 
                 <p className="sr-status" aria-live="polite" role="status">

@@ -162,7 +162,10 @@ export default function RootLayout({
         <meta name="theme-color" content="#0a0a0a" />
       </head>
       <body style={{ backgroundColor: "#0a0a0a" }}>
-        <div className="page-aurora" aria-hidden="true" />
+        <div className="page-aurora" aria-hidden="true">
+          <div className="aurora-contours" />
+          <div className="aurora-dots" />
+        </div>
         {children}
       </body>
     </html>
