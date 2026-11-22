@@ -77,7 +77,7 @@ export default function Projects() {
               fontSize: "1rem",
             }}
           >
-            Each project represents a real challenge solved with thoughtful design and modern technology.
+            Healthcare, social impact, multi-agent AI, mobile and web — each one a real problem taken from idea to a working build.
           </p>
         </ScrollReveal>
 

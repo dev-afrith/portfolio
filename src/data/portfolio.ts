@@ -33,6 +33,65 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: "bloodlink",
+    title: "BloodLink",
+    github: "https://github.com/dev-afrith/bloodlink",
+    liveDemo: "https://bloodlink.afrith15.workers.dev/",
+    description:
+      "A healthcare platform connecting voluntary blood donors, hospitals and families who need blood in an emergency.",
+    longDescription:
+      "BloodLink bridges the gap between voluntary donors, hospital staff and people facing medical emergencies. Donors, hospital representatives and requesters get role-based access; requests carry clinical urgency tiers and can be tracked by reference through their whole lifecycle. The platform also ships WHO-aligned clinical calculators and educational guides, and is server-rendered on Cloudflare Workers for global edge delivery.",
+    techStack: ["TanStack Start", "TypeScript", "Tailwind CSS", "Radix UI", "Framer Motion", "Zod", "Cloudflare Workers"],
+    highlights: [
+      "Role-based access for donors, hospital staff and requesters",
+      "Urgency-tiered requests with reference-based tracking",
+      "WHO-aligned clinical calculators and guides",
+      "Edge SSR deployed on Cloudflare Workers",
+    ],
+    featured: true,
+    category: "Full Stack",
+    gradient: "from-red-500/20 to-rose-600/20",
+  },
+  {
+    id: "foodbridge",
+    title: "FoodBridge",
+    github: "https://github.com/dev-afrith/FoodBridge",
+    liveDemo: "https://foodbridge-afrith.vercel.app/",
+    description:
+      "A social-impact platform where restaurants, shops and individuals list surplus food so it reaches people instead of landfill.",
+    longDescription:
+      "FoodBridge is built around one idea: surplus food can become someone's next meal. Donors submit surplus details across multiple food items, tag each item vegetarian, vegan, egg or non-vegetarian, and add a location. An impact calculator turns a donation into estimated meals and avoided emissions, and a confirmation screen closes the loop. Fully responsive with motion-led interactions throughout.",
+    techStack: ["React", "TypeScript", "Vite", "Tailwind CSS", "Framer Motion"],
+    highlights: [
+      "Multi-item donation form with dietary classification",
+      "Impact calculator for meals and emissions",
+      "Location-aware donation details",
+      "Responsive, animation-led interface",
+    ],
+    featured: true,
+    category: "Frontend",
+    gradient: "from-emerald-500/20 to-lime-600/20",
+  },
+  {
+    id: "bizgenie-ai",
+    title: "BizGenie AI",
+    github: "https://github.com/dev-afrith/bizgenie-ai",
+    description:
+      "A multi-agent AI platform for business research, market analysis and document intelligence.",
+    longDescription:
+      "BizGenie AI coordinates specialised agents over Google's Gemini API with CrewAI and LangChain. Agents research a business, run market analysis (SWOT, competitors, opportunities) and answer questions over uploaded PDF, DOCX and XLSX files through a ChromaDB-backed RAG pipeline. Output lands as PDF/DOCX reports or PPTX decks. FastAPI backend, PostgreSQL storage, React front end, Dockerised for deployment.",
+    techStack: ["React", "FastAPI", "CrewAI", "LangChain", "Gemini API", "PostgreSQL", "ChromaDB", "Docker"],
+    highlights: [
+      "Multi-agent research and market analysis",
+      "RAG over PDF, DOCX and XLSX documents",
+      "Automated reports and slide decks",
+      "Dockerised FastAPI + React architecture",
+    ],
+    featured: false,
+    category: "AI / Web App",
+    gradient: "from-violet-500/20 to-indigo-600/20",
+  },
+  {
     id: "tikizaya",
     title: "Tikizaya",
     github: "https://github.com/dev-afrith/Tiki_Zaya",
@@ -129,7 +188,47 @@ export const projects: Project[] = [
     category: "AI / Web App",
     gradient: "from-rose-500/20 to-pink-600/20",
   },
+  {
+    id: "notesapp",
+    title: "Notes App",
+    github: "https://github.com/dev-afrith/NotesApp",
+    description:
+      "An Android notes app built with Kotlin and Jetpack Compose, with offline storage and a Material 3 interface.",
+    longDescription:
+      "A native Android notes app following clean architecture: MVVM with a Room database, Coroutines and Flow for async work, and Jetpack Compose for the UI. Notes live in a grid, can be pinned, searched by title or content, and deleted with a swipe that offers undo. Each note supports multiple images, the editor opens as a bottom sheet, and the app ships dark by default on Material 3.",
+    techStack: ["Kotlin", "Jetpack Compose", "Room", "MVVM", "Coroutines", "Material 3"],
+    highlights: [
+      "Offline-first storage with Room",
+      "Search, pinning and undoable swipe-delete",
+      "Multiple images per note",
+      "Material 3 dark theme",
+    ],
+    featured: false,
+    category: "Mobile App",
+    gradient: "from-sky-500/20 to-indigo-600/20",
+  },
+  {
+    id: "calculator",
+    title: "Advanced Calculator",
+    github: "https://github.com/dev-afrith/Calculator",
+    liveDemo: "https://calculator-afrith-15.vercel.app/",
+    description:
+      "A multi-mode calculator in vanilla JavaScript: scientific mode, BMI, unit and currency conversion, history and themes.",
+    longDescription:
+      "Built with plain HTML, CSS and JavaScript — no framework. Standard and scientific modes sit alongside BMI analysis with health insights, weight unit conversion and currency conversion from USD-based reference rates. Calculation history is kept locally, the layout ships light and dark themes, and a formula quick-reference sidebar plus keyboard shortcuts keep it fast to use.",
+    techStack: ["HTML", "CSS", "JavaScript"],
+    highlights: [
+      "Standard and scientific calculation modes",
+      "BMI, unit and currency conversion tools",
+      "Local history with keyboard shortcuts",
+      "Light and dark themes, zero dependencies",
+    ],
+    featured: false,
+    category: "Web App",
+    gradient: "from-cyan-500/20 to-teal-600/20",
+  },
 ];
+
 
 export interface Experience {
   id: string;
