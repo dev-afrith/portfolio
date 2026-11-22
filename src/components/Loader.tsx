@@ -8,7 +8,7 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    const duration = 1100;
+    const duration = 700;
     const interval = 20;
     const steps = duration / interval;
     let current = 0;
@@ -20,7 +20,7 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
         clearInterval(timer);
         setTimeout(() => {
           setIsExiting(true);
-          setTimeout(onComplete, 450);
+          setTimeout(onComplete, 300);
         }, 150);
       }
       setProgress(Math.min(current, 100));
@@ -67,7 +67,7 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
               Portfolio
             </motion.p>
 
-            <motion.h1
+            <motion.div
               className="heading-display"
               style={{ fontSize: "clamp(1.5rem, 4vw, 2.5rem)" }}
               initial={{ opacity: 0, y: 10 }}
@@ -75,7 +75,7 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
               transition={{ delay: 0.2, duration: 0.6 }}
             >
               Muhammad Afrith
-            </motion.h1>
+            </motion.div>
 
             <motion.p
               style={{

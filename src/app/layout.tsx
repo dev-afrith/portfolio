@@ -15,6 +15,14 @@ export const metadata: Metadata = {
   keywords: [
     "Muhammad Afrith",
     "Muhammad Afrith Portfolio",
+    "Afrith Portfolio",
+    "Afrith portfolio website",
+    "Muhammad Portfolio",
+    "Afrith",
+    "Muhammad Afrith D",
+    "Afrith developer",
+    "Afrith full stack developer",
+    "Muhammad Afrith Dharmapuri developer",
     "Muhammad Afrith Developer",
     "Muhammad Afrith Web Developer",
     "Muhammad Afrith Mobile App Developer",
@@ -34,7 +42,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://muhammadafrithportfolio.vercel.app"),
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://muhammadafrithportfolio.vercel.app",
     title: "Muhammad Afrith — Full Stack & Mobile App Developer | Portfolio",
     description:
@@ -76,37 +84,63 @@ export const metadata: Metadata = {
 };
 
 // JSON-LD Structured Data
+const SITE_URL = "https://muhammadafrithportfolio.vercel.app";
+
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Muhammad Afrith",
-  url: "https://muhammadafrithportfolio.vercel.app",
-  image: "/og-image.png",
-  sameAs: [
-    "https://github.com/dev-afrith",
-    "https://www.linkedin.com/in/muhammad-afrith-d-661822327/",
-  ],
-  jobTitle: "Full Stack Developer / Mobile App Developer",
-  worksFor: {
-    "@type": "Organization",
-    name: "Freelance",
-  },
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Dharmapuri",
-    addressRegion: "Tamil Nadu",
-    addressCountry: "India",
-  },
-  knowsAbout: [
-    "React.js",
-    "Next.js",
-    "Flutter",
-    "Node.js",
-    "TypeScript",
-    "MongoDB",
-    "PostgreSQL",
-    "Firebase",
-    "Docker",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${SITE_URL}/#person`,
+      name: "Muhammad Afrith",
+      alternateName: ["Muhammad Afrith D", "Afrith"],
+      url: SITE_URL,
+      image: `${SITE_URL}/og-image.png`,
+      mainEntityOfPage: `${SITE_URL}/#webpage`,
+      sameAs: [
+        "https://github.com/dev-afrith",
+        "https://www.linkedin.com/in/muhammad-afrith-d-661822327/",
+      ],
+      jobTitle: "Full Stack Developer / Mobile App Developer",
+      worksFor: {
+        "@type": "Organization",
+        name: "Freelance",
+      },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Dharmapuri",
+        addressRegion: "Tamil Nadu",
+        addressCountry: "India",
+      },
+      knowsAbout: [
+        "React.js",
+        "Next.js",
+        "Flutter",
+        "Node.js",
+        "TypeScript",
+        "MongoDB",
+        "PostgreSQL",
+        "Firebase",
+        "Docker",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: "Muhammad Afrith — Portfolio",
+      alternateName: ["Afrith Portfolio", "Muhammad Portfolio"],
+      inLanguage: "en-IN",
+      publisher: { "@id": `${SITE_URL}/#person` },
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": `${SITE_URL}/#webpage`,
+      url: SITE_URL,
+      name: "Muhammad Afrith — Full Stack & Mobile App Developer",
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      mainEntity: { "@id": `${SITE_URL}/#person` },
+    },
   ],
 };
 
@@ -120,7 +154,9 @@ export default function RootLayout({
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+          }}
         />
         <link rel="icon" href="/favicon.ico" />
         <meta name="theme-color" content="#0a0a0a" />

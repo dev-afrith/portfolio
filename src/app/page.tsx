@@ -27,22 +27,22 @@ export default function Home() {
 
   return (
     <>
-      {isLoading && <Loader onComplete={handleLoadComplete} />}
+      {/* Content is always rendered so the prerendered HTML carries every section
+          for crawlers and social scrapers. The loader sits on top as an overlay. */}
+      <SmoothScroll>
+        <Navbar />
+        <main>
+          <Hero />
+          <About />
+          <Projects />
+          <Experience />
+          <TechStack />
+          <Contact />
+        </main>
+        <Footer />
+      </SmoothScroll>
 
-      {!isLoading && (
-        <SmoothScroll>
-          <Navbar />
-          <main>
-            <Hero />
-            <About />
-            <Projects />
-            <Experience />
-            <TechStack />
-            <Contact />
-          </main>
-          <Footer />
-        </SmoothScroll>
-      )}
+      {isLoading && <Loader onComplete={handleLoadComplete} />}
     </>
   );
 }
