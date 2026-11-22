@@ -30,7 +30,7 @@ export default function Experience() {
           <h2
             className="heading-section"
             style={{
-              fontSize: "clamp(2.45rem, 5vw, 4.15rem)",
+              fontSize: "clamp(2rem, 3.4vw, 2.9rem)",
               marginBottom: "3.4rem",
               maxWidth: "760px",
             }}

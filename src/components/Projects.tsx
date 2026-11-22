@@ -58,7 +58,7 @@ export default function Projects() {
           <h2
             className="heading-section"
             style={{
-              fontSize: "clamp(2.55rem, 5vw, 4.4rem)",
+              fontSize: "clamp(2.1rem, 3.6vw, 3.1rem)",
               marginBottom: "1.25rem",
               maxWidth: "760px",
             }}

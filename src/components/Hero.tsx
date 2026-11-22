@@ -55,12 +55,12 @@ export default function Hero() {
       }}
       style={{
         position: "relative",
-        minHeight: "100svh",
+        minHeight: "86svh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         overflow: "hidden",
-        padding: "7.5rem 0 5rem",
+        padding: "6.5rem 0 3.5rem",
       }}
     >
       {/* Three.js Background */}
@@ -133,7 +133,7 @@ export default function Hero() {
           style={{
             x: reduceMotion ? 0 : titleX,
             y: reduceMotion ? 0 : titleY,
-            fontSize: "clamp(3.1rem, 10vw, 8rem)",
+            fontSize: "clamp(2.6rem, 7vw, 5.75rem)",
             marginBottom: "1.1rem",
             cursor: "default",
             position: "relative",
@@ -150,7 +150,7 @@ export default function Hero() {
           variants={itemVariants}
           className="heading-section"
           style={{
-            fontSize: "clamp(1.12rem, 2.2vw, 1.55rem)",
+            fontSize: "clamp(1.05rem, 1.7vw, 1.35rem)",
             color: "var(--color-accent-warm)",
             marginBottom: "1.2rem",
             letterSpacing: "-0.02em",
@@ -164,7 +164,7 @@ export default function Hero() {
           variants={itemVariants}
           className="text-body"
           style={{
-            maxWidth: "720px",
+            maxWidth: "640px",
             margin: "0 auto 2rem",
             fontSize: "clamp(1rem, 1.22vw, 1.18rem)",
             lineHeight: 1.8,

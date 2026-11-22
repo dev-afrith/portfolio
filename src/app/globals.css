@@ -208,30 +208,30 @@ body::after {
 
 /* ===== Section Spacing ===== */
 .section-padding {
-  padding: 8.5rem 1.25rem;
+  padding: 5.5rem 1.25rem;
 }
 
 @media (min-width: 768px) {
   .section-padding {
-    padding: 11rem 2rem;
+    padding: 6rem 2rem;
   }
 }
 
 @media (min-width: 1024px) {
   .section-padding {
-    padding: 13rem 4rem;
+    padding: 7rem 4rem;
   }
 }
 
 /* ===== Container ===== */
 .content-container {
-  max-width: 1180px;
+  max-width: 1280px;
   margin: 0 auto;
   width: 100%;
 }
 
 .content-container-wide {
-  max-width: 1400px;
+  max-width: 1520px;
   margin: 0 auto;
   width: 100%;
 }
@@ -1064,7 +1064,7 @@ button:focus-visible {
 /* ===== Mobile Optimizations ===== */
 @media (max-width: 768px) {
   .section-padding {
-    padding: 7rem 1.15rem;
+    padding: 5rem 1.15rem;
   }
 
   .project-card-media {

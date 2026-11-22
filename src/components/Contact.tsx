@@ -81,7 +81,7 @@ export default function Contact() {
                 <h2
                   className="heading-section"
                   style={{
-                    fontSize: "clamp(2.35rem, 4.4vw, 3.85rem)",
+                    fontSize: "clamp(1.95rem, 3.2vw, 2.85rem)",
                     marginBottom: "1.1rem",
                     maxWidth: "620px",
                   }}
