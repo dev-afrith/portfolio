@@ -209,25 +209,25 @@ export const projects: Project[] = [
     gradient: "from-orange-500/20 to-red-600/20",
   },
   {
-    id: "calculator",
-    title: "Advanced Calculator",
-    github: "https://github.com/dev-afrith/Calculator",
-    liveDemo: "https://calculator-afrith-15.vercel.app/",
+    id: "ibvap",
+    title: "IBVAP",
+    github: "https://github.com/iamasifroshan/IBVAP",
     description:
-      "A multi-mode calculator in vanilla JavaScript: scientific mode, BMI, unit and currency conversion, history and themes.",
+      "An intelligent border video analytics platform that turns existing CCTV into AI monitoring: detection, tracking, alerts and evidence.",
     longDescription:
-      "Built with plain HTML, CSS and JavaScript — no framework. Standard and scientific modes sit alongside BMI analysis with health insights, weight unit conversion and currency conversion from USD-based reference rates. Calculation history is kept locally, the layout ships light and dark themes, and a formula quick-reference sidebar plus keyboard shortcuts keep it fast to use.",
-    techStack: ["HTML", "CSS", "JavaScript"],
+      "IBVAP puts an AI layer over cameras already installed at border outposts. Frames run through OpenCV capture into YOLO person detection and ByteTrack identity tracking, then YuNet face detection and SFace recognition, with EMA smoothing on the boxes. An incident engine scores threats, raises alerts and captures snapshots and clips as evidence into SQLite, while a React console shows live surveillance, known-person profiles and system health over REST and WebSockets. Built for Smart India Hackathon; I contributed the command-centre UI.",
+    techStack: ["React", "TypeScript", "Vite", "FastAPI", "OpenCV", "YOLO", "WebSockets"],
     highlights: [
-      "Standard and scientific calculation modes",
-      "BMI, unit and currency conversion tools",
-      "Local history with keyboard shortcuts",
-      "Light and dark themes, zero dependencies",
+      "YOLO detection with ByteTrack identity tracking",
+      "YuNet + SFace recognition pipeline",
+      "Incident engine with threat scoring and evidence capture",
+      "Live surveillance console with system health",
     ],
-    featured: false,
-    category: "Web App",
-    gradient: "from-cyan-500/20 to-teal-600/20",
+    featured: true,
+    category: "AI / Security",
+    gradient: "from-slate-500/20 to-red-600/20",
   },
+
 ];
 
 
