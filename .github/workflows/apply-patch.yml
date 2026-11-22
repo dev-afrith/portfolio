@@ -1,0 +1,29 @@
+name: apply-patch
+
+# Applies portfolio-all-changes.patch to main. Run it from the Actions tab,
+# then delete this file and the .patch file once the build is live.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Apply patch
+        run: git am --3way portfolio-all-changes.patch
+
+      - name: Push to main
+        run: git push origin HEAD:main
