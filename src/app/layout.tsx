@@ -125,6 +125,7 @@ export default function RootLayout({
       lang="en"
       className={`${interTight.variable} ${inter.variable} ${jetbrainsMono.variable}`}
       style={{ backgroundColor: "#08080A" }}
+      suppressHydrationWarning
     >
       <head>
         <script
