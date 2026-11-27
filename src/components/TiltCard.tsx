@@ -34,7 +34,6 @@ export default function TiltCard({
     let currentRy = 0;
     let targetScale = 1;
     let currentScale = 1;
-    let active = false;
 
     const animate = () => {
       currentRx += (targetRx - currentRx) * 0.14;
@@ -44,13 +43,12 @@ export default function TiltCard({
       el.style.transform = `perspective(1100px) rotateX(${currentRx.toFixed(3)}deg) rotateY(${currentRy.toFixed(3)}deg) scale3d(${currentScale.toFixed(4)}, ${currentScale.toFixed(4)}, 1)`;
 
       const settled =
-        !active &&
-        Math.abs(currentRx) < 0.02 &&
-        Math.abs(currentRy) < 0.02 &&
-        Math.abs(currentScale - 1) < 0.0005;
+        Math.abs(currentRx - targetRx) < 0.02 &&
+        Math.abs(currentRy - targetRy) < 0.02 &&
+        Math.abs(currentScale - targetScale) < 0.0005;
 
       if (settled) {
-        el.style.transform = "";
+        if (targetScale === 1) el.style.transform = "";
         rafId = 0;
         return;
       }
@@ -65,10 +63,7 @@ export default function TiltCard({
     const onPointerMove = (e: PointerEvent) => {
       const target = e.target as HTMLElement | null;
       if (target && target.closest(".aw-pill-btn")) {
-        targetRx = 0;
-        targetRy = 0;
-        targetScale = 1;
-        startLoop();
+        onPointerLeave();
         return;
       }
 
@@ -80,7 +75,6 @@ export default function TiltCard({
       targetRy = (px - 0.5) * (maxTilt * 2);
       targetRx = (0.5 - py) * (maxTilt * 1.7);
       targetScale = 1.015;
-      active = true;
 
       el.style.setProperty("--glare-x", `${(px * 100).toFixed(1)}%`);
       el.style.setProperty("--glare-y", `${(py * 100).toFixed(1)}%`);
@@ -89,7 +83,6 @@ export default function TiltCard({
     };
 
     const onPointerLeave = () => {
-      active = false;
       targetRx = 0;
       targetRy = 0;
       targetScale = 1;

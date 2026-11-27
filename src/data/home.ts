@@ -1,0 +1,86 @@
+export const SKILL_BOXES = [
+  {
+    title: "Frontend Development",
+    dot: "#E8B77C",
+    bg: "rgba(232, 183, 124, 0.12)",
+    a45: "rgba(232, 183, 124, 0.45)",
+    a25: "rgba(232, 183, 124, 0.25)",
+    a18: "rgba(232, 183, 124, 0.18)",
+    items: ["React.js", "Next.js", "JavaScript", "TypeScript", "Tailwind CSS"],
+  },
+  {
+    title: "Backend Development",
+    dot: "#8FB8F0",
+    bg: "rgba(143, 184, 240, 0.12)",
+    a45: "rgba(143, 184, 240, 0.45)",
+    a25: "rgba(143, 184, 240, 0.25)",
+    a18: "rgba(143, 184, 240, 0.18)",
+    items: ["Node.js", "Express.js", "REST APIs"],
+  },
+  {
+    title: "Mobile Development",
+    dot: "#7FCFA8",
+    bg: "rgba(127, 207, 168, 0.12)",
+    a45: "rgba(127, 207, 168, 0.45)",
+    a25: "rgba(127, 207, 168, 0.25)",
+    a18: "rgba(127, 207, 168, 0.18)",
+    items: ["Flutter", "Dart", "React Native", "Android Studio"],
+  },
+  {
+    title: "Database & Cloud",
+    dot: "#C9A6F0",
+    bg: "rgba(201, 166, 240, 0.12)",
+    a45: "rgba(201, 166, 240, 0.45)",
+    a25: "rgba(201, 166, 240, 0.25)",
+    a18: "rgba(201, 166, 240, 0.18)",
+    items: ["MongoDB", "MySQL", "PostgreSQL", "Firebase"],
+  },
+  {
+    title: "Build & Deployment Tools",
+    dot: "#E0B076",
+    bg: "rgba(224, 176, 118, 0.12)",
+    a45: "rgba(224, 176, 118, 0.45)",
+    a25: "rgba(224, 176, 118, 0.25)",
+    a18: "rgba(224, 176, 118, 0.18)",
+    items: ["Git", "GitHub", "Vercel", "Netlify", "Docker"],
+  },
+];
+
+export const EXPERIENCES = [
+  {
+    date: "MARCH 2026 — APRIL 2026",
+    role: "Mobile App Development Intern",
+    company: "Zaya Code Hub",
+    badge: "DEVELOPMENT",
+    badgeStyle: {
+      color: "light-dark(#246444, #7FCFA8)",
+      background: "rgba(127, 207, 168, 0.12)",
+      border: "1px solid rgba(127, 207, 168, 0.28)",
+    },
+    bullets: [
+      "Developed and maintained cross-platform mobile applications using Flutter",
+      "Focused on responsive UI design and smooth user experience",
+      "Integrated REST APIs",
+      "Fixed application bugs and optimized performance",
+      "Collaborated on real-world projects with development teams",
+    ],
+  },
+  {
+    date: "MARCH 2026 — MAY 2026",
+    role: "Social Marketing Intern",
+    company: "InternPe",
+    badge: "MARKETING",
+    badgeStyle: {
+      color: "light-dark(#345d8d, #8FB8F0)",
+      background: "rgba(143, 184, 240, 0.12)",
+      border: "1px solid rgba(143, 184, 240, 0.28)",
+    },
+    bullets: [
+      "Managed social media campaigns",
+      "Created engaging digital content",
+      "Improved audience reach and visibility",
+      "Analyzed campaign metrics",
+      "Contributed marketing strategies for engagement growth",
+    ],
+  },
+];

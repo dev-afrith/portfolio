@@ -114,7 +114,7 @@ export default function MobileProjectNav() {
                   }}
                 >
                   <span>{item.label}</span>
-                  <span style={{ fontSize: "14px", color: "#858078" }} aria-hidden="true">→</span>
+                  <span style={{ fontSize: "14px", color: "var(--ink-3)" }} aria-hidden="true">→</span>
                 </Link>
               ))}
             </nav>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { PROJECTS, type ProjectItem } from "@/data/projects";
+import { EXPERIENCES, SKILL_BOXES } from "@/data/home";
 import TiltCard from "@/components/TiltCard";
 import ProjectDetailsModal from "@/components/ProjectDetailsModal";
 
@@ -17,54 +18,6 @@ function handleCardGlow(e: React.PointerEvent<HTMLElement>) {
   e.currentTarget.style.setProperty("--card-mx", `${(e.clientX - rect.left).toFixed(1)}px`);
   e.currentTarget.style.setProperty("--card-my", `${(e.clientY - rect.top).toFixed(1)}px`);
 }
-
-const SKILL_BOXES = [
-  {
-    title: "Frontend Development",
-    dot: "#E8B77C",
-    bg: "rgba(232, 183, 124, 0.12)",
-    a45: "rgba(232, 183, 124, 0.45)",
-    a25: "rgba(232, 183, 124, 0.25)",
-    a18: "rgba(232, 183, 124, 0.18)",
-    items: ["React.js", "Next.js", "JavaScript", "TypeScript", "Tailwind CSS"],
-  },
-  {
-    title: "Backend Development",
-    dot: "#8FB8F0",
-    bg: "rgba(143, 184, 240, 0.12)",
-    a45: "rgba(143, 184, 240, 0.45)",
-    a25: "rgba(143, 184, 240, 0.25)",
-    a18: "rgba(143, 184, 240, 0.18)",
-    items: ["Node.js", "Express.js", "REST APIs"],
-  },
-  {
-    title: "Mobile Development",
-    dot: "#7FCFA8",
-    bg: "rgba(127, 207, 168, 0.12)",
-    a45: "rgba(127, 207, 168, 0.45)",
-    a25: "rgba(127, 207, 168, 0.25)",
-    a18: "rgba(127, 207, 168, 0.18)",
-    items: ["Flutter", "Dart", "React Native", "Android Studio"],
-  },
-  {
-    title: "Database & Cloud",
-    dot: "#C9A6F0",
-    bg: "rgba(201, 166, 240, 0.12)",
-    a45: "rgba(201, 166, 240, 0.45)",
-    a25: "rgba(201, 166, 240, 0.25)",
-    a18: "rgba(201, 166, 240, 0.18)",
-    items: ["MongoDB", "MySQL", "PostgreSQL", "Firebase"],
-  },
-  {
-    title: "Build & Deployment Tools",
-    dot: "#E0B076",
-    bg: "rgba(224, 176, 118, 0.12)",
-    a45: "rgba(224, 176, 118, 0.45)",
-    a25: "rgba(224, 176, 118, 0.25)",
-    a18: "rgba(224, 176, 118, 0.18)",
-    items: ["Git", "GitHub", "Vercel", "Netlify", "Docker"],
-  },
-];
 
 function SkillCategoryIcon({ title, color }: { title: string; color: string }) {
   const s = { width: 20, height: 20, flexShrink: 0, color } as const;
@@ -232,45 +185,6 @@ function TechLogo({ name, color }: { name: string; color: string }) {
   }
 }
 
-const EXPERIENCES = [
-  {
-    date: "MARCH 2026 — APRIL 2026",
-    role: "Mobile App Development Intern",
-    company: "Zaya Code Hub",
-    badge: "DEVELOPMENT",
-    badgeStyle: {
-      color: "#7FCFA8",
-      background: "rgba(127, 207, 168, 0.12)",
-      border: "1px solid rgba(127, 207, 168, 0.28)",
-    },
-    bullets: [
-      "Developed and maintained cross-platform mobile applications using Flutter",
-      "Focused on responsive UI design and smooth user experience",
-      "Integrated REST APIs",
-      "Fixed application bugs and optimized performance",
-      "Collaborated on real-world projects with development teams",
-    ],
-  },
-  {
-    date: "MARCH 2026 — MAY 2026",
-    role: "Social Marketing Intern",
-    company: "InternPe",
-    badge: "MARKETING",
-    badgeStyle: {
-      color: "#8FB8F0",
-      background: "rgba(143, 184, 240, 0.12)",
-      border: "1px solid rgba(143, 184, 240, 0.28)",
-    },
-    bullets: [
-      "Managed social media campaigns",
-      "Created engaging digital content",
-      "Improved audience reach and visibility",
-      "Analyzed campaign metrics",
-      "Contributed marketing strategies for engagement growth",
-    ],
-  },
-];
-
 const MARQUEE = [
   "TypeScript", "React", "Next.js", "TanStack Start", "Flutter",
   "Kotlin", "Node.js", "PostgreSQL", "MongoDB", "Python", "Docker", "Firebase",
@@ -352,7 +266,9 @@ function MoonIcon() {
 export default function Home() {
   const [activeNav, setActiveNav] = useState("about");
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isDark, setIsDark] = useState(() => (typeof window !== "undefined" ? document.documentElement.classList.contains("dark") : true));
+  const mobileMenuRef = useRef<HTMLDialogElement>(null);
+  const successDialogRef = useRef<HTMLDialogElement>(null);
+  const [isDark, setIsDark] = useState(true);
   const [form, setForm] = useState({ name: "", email: "", mobile: "", subject: "", message: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [activeIdx, setActiveIdx] = useState(0);
@@ -367,15 +283,17 @@ export default function Home() {
 
 
 
+  useEffect(() => { setIsDark(document.documentElement.classList.contains("dark")); }, []);
+
   const toggleTheme = () => {
     const nextDark = !isDark;
     setIsDark(nextDark);
-    if (nextDark) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+    document.documentElement.classList.toggle("dark", nextDark);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", nextDark ? "#08080A" : "#ffffff");
+    try {
+      localStorage.setItem("theme", nextDark ? "dark" : "light");
+    } catch {
+      // Storage may be disabled in this browser.
     }
   };
 
@@ -506,20 +424,19 @@ export default function Home() {
 
   useEffect(() => {
     if (!menuOpen) return;
-    document.body.style.overflow = "hidden";
+    const dialog = mobileMenuRef.current;
+    if (!dialog) return;
+    dialog.showModal();
+    const scrollLock = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenuOpen(false);
-    };
+
     const onResize = () => {
       if (window.innerWidth >= 900) setMenuOpen(false);
     };
-    window.addEventListener("keydown", onKey);
     window.addEventListener("resize", onResize);
     return () => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-      window.removeEventListener("keydown", onKey);
+      dialog.close();
+      document.documentElement.style.overflow = scrollLock;
       window.removeEventListener("resize", onResize);
     };
   }, [menuOpen]);
@@ -626,6 +543,18 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    const dialog = successDialogRef.current;
+    if (status !== "sent" || !dialog) return;
+    dialog.showModal();
+    const scrollLock = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      dialog.close();
+      document.documentElement.style.overflow = scrollLock;
+    };
+  }, [status]);
+
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("sending");
@@ -638,7 +567,7 @@ export default function Home() {
       if (res.ok) {
         setStatus("sent");
         setForm({ name: "", email: "", mobile: "", subject: "", message: "" });
-        setTimeout(() => setStatus("idle"), 5000);
+
       } else {
         setStatus("error");
       }
@@ -724,13 +653,21 @@ export default function Home() {
       </header>
 
       {menuOpen && (
-        <div
+        <dialog
+          ref={mobileMenuRef}
           id="aw-mobile-nav-sheet"
           className="aw-mobile-sheet"
-          role="dialog"
-          aria-modal="true"
           aria-label="Navigation menu"
+          data-lenis-prevent
+          onCancel={(event) => {
+            event.preventDefault();
+            setMenuOpen(false);
+          }}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setMenuOpen(false);
+          }}
         >
+          <div className="aw-mobile-sheet-content">
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", minHeight: "44px" }}>
             <span style={{ fontWeight: 600, fontSize: "15px", letterSpacing: "-0.02em" }}>Muhammad Afrith</span>
             <button
@@ -755,7 +692,7 @@ export default function Home() {
               </svg>
             </button>
           </div>
-          <nav style={{ display: "flex", flexDirection: "column", gap: "4px", marginTop: "32px" }} aria-label="Mobile">
+          <nav className="aw-mobile-sheet-links" aria-label="Mobile">
             {["About", "Projects", "Experience", "Skills", "Contact"].map((item) => {
               const id = item.toLowerCase();
               return (
@@ -765,26 +702,24 @@ export default function Home() {
                   className={`aw-mobile-sheet-link ${activeNav === id ? "is-active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    document.body.style.overflow = "";
-                    document.documentElement.style.overflow = "";
                     setMenuOpen(false);
                     requestAnimationFrame(() => {
                       const target = document.getElementById(id);
                       if (target) {
-                        const top = target.getBoundingClientRect().top + window.scrollY - 72;
-                        window.scrollTo({ top, behavior: "smooth" });
-                        window.history.replaceState(null, "", `#${id}`);
+                        window.history.pushState(null, "", `#${id}`);
+                        target.scrollIntoView({ block: "start" });
                       }
                     });
                   }}
                 >
                   <span>{item}</span>
-                  <span style={{ fontSize: "14px", color: "#858078" }} aria-hidden="true">→</span>
+                  <span style={{ fontSize: "14px", color: "var(--ink-3)" }} aria-hidden="true">→</span>
                 </a>
               );
             })}
           </nav>
-        </div>
+          </div>
+        </dialog>
       )}
 
       <main id="main-content">
@@ -792,6 +727,10 @@ export default function Home() {
           <HeroCanvas />
           <div className="aw-hero-orbit aw-hero-orbit-a" aria-hidden="true" />
           <div className="aw-hero-orbit aw-hero-orbit-b" aria-hidden="true" />
+          <div className="aw-hero-accents" aria-hidden="true">
+            <div className="aw-hero-satellite aw-hero-satellite-gold"><span /></div>
+            <div className="aw-hero-satellite aw-hero-satellite-blue"><span /></div>
+          </div>
           <div className="aw-container" style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
             <div className="aw-eyebrow">
               <span className="aw-eyebrow-rule" aria-hidden="true" />
@@ -881,23 +820,23 @@ export default function Home() {
                 fontWeight: 600,
                 letterSpacing: "-0.02em",
                 lineHeight: 1.06,
-                color: "#F5F3EF",
+                color: "var(--ink)",
                 marginTop: "16px",
                 marginBottom: "36px",
                 maxWidth: "22ch",
               }}
             >
-              Building products that feel <span style={{ color: "#E8B77C" }}>fast</span>,{" "}
-              <span style={{ color: "#E8B77C" }}>reliable</span>, and{" "}
-              <span style={{ color: "#E8B77C" }}>effortless</span>.
+              Building products that feel <span style={{ color: "var(--gold-text)" }}>fast</span>,{" "}
+              <span style={{ color: "var(--gold-text)" }}>reliable</span>, and{" "}
+              <span style={{ color: "var(--gold-text)" }}>effortless</span>.
             </h2>
 
             <div className="aw-about-grid">
               <div className="aw-exp-card aw-reveal" onPointerMove={handleCardGlow}>
-                <p className="aw-label" style={{ color: "#E8B77C", letterSpacing: "0.22em" }}>
+                <p className="aw-label" style={{ color: "var(--gold-text)", letterSpacing: "0.22em" }}>
                   WHO I AM
                 </p>
-                <div style={{ display: "grid", gap: "16px", marginTop: "16px", color: "#B9B5AD", fontSize: "15px", lineHeight: 1.7 }}>
+                <div style={{ display: "grid", gap: "16px", marginTop: "16px", color: "light-dark(#56534f, #B9B5AD)", fontSize: "15px", lineHeight: 1.7 }}>
                   <p>
                     I am Muhammad Afrith, a Full-Stack and Mobile App Developer and third-year
                     Computer Science &amp; Engineering student (graduating 2028) focused on
@@ -918,22 +857,22 @@ export default function Home() {
 
               <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "24px" }}>
                 <div className="aw-exp-card aw-reveal" style={{ padding: "28px" }} onPointerMove={handleCardGlow}>
-                  <p className="aw-label" style={{ color: "#E8B77C", letterSpacing: "0.22em" }}>
+                  <p className="aw-label" style={{ color: "var(--gold-text)", letterSpacing: "0.22em" }}>
                     CURRENT FOCUS
                   </p>
-                  <p style={{ fontSize: "18px", fontWeight: 600, color: "#F5F3EF", marginTop: "12px" }}>
+                  <p style={{ fontSize: "18px", fontWeight: 600, color: "var(--ink)", marginTop: "12px" }}>
                     Full Stack Developer / Mobile App Developer
                   </p>
-                  <p style={{ fontSize: "14px", color: "#A8A49C", marginTop: "6px" }}>
+                  <p style={{ fontSize: "14px", color: "var(--ink-2)", marginTop: "6px" }}>
                     Code. Design. Build.
                   </p>
                 </div>
 
                 <div className="aw-exp-card aw-reveal" style={{ padding: "28px" }} onPointerMove={handleCardGlow}>
-                  <p className="aw-label" style={{ color: "#E8B77C", letterSpacing: "0.22em" }}>
+                  <p className="aw-label" style={{ color: "var(--gold-text)", letterSpacing: "0.22em" }}>
                     PORTFOLIO DIRECTION
                   </p>
-                  <p style={{ fontSize: "14px", color: "#A8A49C", marginTop: "12px", lineHeight: 1.65 }}>
+                  <p style={{ fontSize: "14px", color: "var(--ink-2)", marginTop: "12px", lineHeight: 1.65 }}>
                     Product-first development focused on maintainable code, polished UX, and
                     scalable delivery.
                   </p>
@@ -948,14 +887,14 @@ export default function Home() {
                 ["2", "EXPERIENCE ENTRIES"],
                 ["Dharmapuri", "LOCATION"],
               ].map(([val, label]) => (
-                <div key={label} className="aw-stat-card aw-reveal" onPointerMove={handleCardGlow}>
-                  <p style={{ fontSize: "22px", fontWeight: 600, color: "#E8B77C", lineHeight: 1.2 }}>
+                <TiltCard key={label} className="aw-stat-card aw-reveal" maxTilt={4} onPointerMove={handleCardGlow}>
+                  <p style={{ fontSize: "22px", fontWeight: 600, color: "var(--gold-text)", lineHeight: 1.2 }}>
                     {val}
                   </p>
-                  <p className="aw-label" style={{ marginTop: "8px", color: "#6E6A63" }}>
+                  <p className="aw-label" style={{ marginTop: "8px", color: "light-dark(#56534f, #6E6A63)" }}>
                     {label}
                   </p>
-                </div>
+                </TiltCard>
               ))}
             </div>
           </div>
@@ -1037,8 +976,8 @@ export default function Home() {
                     <div className="aw-pcard-body" style={{ minHeight: "auto", paddingBottom: "12px" }}>
                       <div className="aw-pcard-meta">
                         <span className="aw-label">{p.idx}</span>
-                        <span className="aw-label" style={{ color: "#6E6A63" }} aria-hidden="true">·</span>
-                        <span className="aw-label" style={{ color: "#858078" }}>{p.category}</span>
+                        <span className="aw-label" style={{ color: "light-dark(#56534f, #6E6A63)" }} aria-hidden="true">·</span>
+                        <span className="aw-label" style={{ color: "var(--ink-3)" }}>{p.category}</span>
                       </div>
                       <span className="aw-pcard-title">{p.title}</span>
                       <p className="aw-pcard-summary">{p.summary}</p>
@@ -1178,7 +1117,7 @@ export default function Home() {
           <div className="aw-container">
             <div className="aw-reveal" style={{ display: "inline-flex", alignItems: "center", gap: "12px", marginBottom: "36px" }}>
               <span style={{ width: "24px", height: "1px", background: "var(--gold-text)" }} aria-hidden="true" />
-              <h2 className="aw-label" style={{ color: "#E8B77C" }}>EXPERIENCE &amp; INTERNSHIPS</h2>
+              <h2 className="aw-label" style={{ color: "var(--gold-text)" }}>EXPERIENCE &amp; INTERNSHIPS</h2>
             </div>
 
             <div className="aw-exp-timeline">
@@ -1202,7 +1141,7 @@ export default function Home() {
                   >
                     <div className="aw-exp-top">
                       <div className="aw-exp-date-row">
-                        <span className="aw-label" style={{ color: "#E8B77C", letterSpacing: "0.2em" }}>
+                        <span className="aw-label" style={{ color: "var(--gold-text)", letterSpacing: "0.2em" }}>
                           0{idx + 1} · {exp.date}
                         </span>
                       </div>
@@ -1252,11 +1191,11 @@ export default function Home() {
                   fontWeight: 600,
                   lineHeight: 1.06,
                   letterSpacing: "-0.02em",
-                  color: "#F5F3EF",
+                  color: "var(--ink)",
                   marginTop: "16px",
                 }}
               >
-                Let&apos;s build something <span style={{ color: "#E8B77C" }}>great</span> together.
+                Let&apos;s build something <span style={{ color: "var(--gold-text)" }}>great</span> together.
               </h2>
               <p style={{ color: "var(--ink-2)", fontSize: "15px", lineHeight: 1.7, maxWidth: "46ch", marginTop: "16px" }}>
                 Have a project in mind or want to collaborate? Reach out and I&apos;ll respond as
@@ -1375,7 +1314,7 @@ export default function Home() {
                   {status === "sending" ? "Sending…" : "Send Message"}
                 </button>
                 {status === "error" && (
-                  <p style={{ color: "#f87171", fontSize: "14px" }}>
+                  <p style={{ color: "light-dark(#a52626, #f87171)", fontSize: "14px" }}>
                     Failed to send. Please email directly.
                   </p>
                 )}
@@ -1384,82 +1323,32 @@ export default function Home() {
           </div>
 
           {status === "sent" && (
-            <div
-              role="status"
-              aria-live="polite"
-              onClick={() => setStatus("idle")}
-              style={{
-                position: "fixed",
-                inset: 0,
-                zIndex: 60,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "24px",
-                background: "rgba(8, 8, 10, 0.68)",
-                backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)",
+            <dialog
+              ref={successDialogRef}
+              className="aw-success-dialog"
+              aria-labelledby="aw-success-title"
+              aria-describedby="aw-success-message"
+              onCancel={(event) => {
+                event.preventDefault();
+                setStatus("idle");
+              }}
+              onClick={(event) => {
+                if (event.target === event.currentTarget) setStatus("idle");
               }}
             >
-              <div
-                onClick={(e) => e.stopPropagation()}
-                style={{
-                  position: "relative",
-                  maxWidth: "420px",
-                  width: "100%",
-                  padding: "28px 32px",
-                  borderRadius: "20px",
-                  background: "#0E0E0D",
-                  border: "1px solid rgba(232, 183, 124, 0.35)",
-                  boxShadow: "0 24px 60px rgba(0, 0, 0, 0.65)",
-                  textAlign: "center",
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() => setStatus("idle")}
-                  aria-label="Dismiss notification"
-                  style={{
-                    position: "absolute",
-                    top: "12px",
-                    right: "12px",
-                    background: "none",
-                    border: "none",
-                    color: "#A8A49C",
-                    cursor: "pointer",
-                    fontSize: "18px",
-                    lineHeight: 1,
-                    padding: "4px 8px",
-                  }}
-                >
-                  ×
-                </button>
-                <div
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    margin: "0 auto 14px",
-                    borderRadius: "999px",
-                    background: "rgba(232, 183, 124, 0.14)",
-                    border: "1px solid rgba(232, 183, 124, 0.35)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#E8B77C",
-                    fontSize: "18px",
-                  }}
-                  aria-hidden="true"
-                >
-                  ✓
+              <div className="aw-success-content">
+                <div className="aw-success-mark" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="30" height="30" fill="none">
+                    <path d="m5 12 4 4L19 6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </div>
-                <p style={{ fontSize: "17px", fontWeight: 600, color: "#F5F3EF" }}>
-                  Successfully sent!
-                </p>
-                <p style={{ fontSize: "14px", color: "#A8A49C", marginTop: "6px" }}>
-                  Afrith will contact you soon.
-                </p>
+                <h2 className="aw-h3" id="aw-success-title">Message sent</h2>
+                <p id="aw-success-message">Thanks for reaching out. Afrith will get back to you soon.</p>
+                <button type="button" className="aw-btn-primary" onClick={() => setStatus("idle")}>
+                  Done
+                </button>
               </div>
-            </div>
+            </dialog>
           )}
 
           <div
@@ -1479,10 +1368,10 @@ export default function Home() {
               }}
             >
               <div>
-                <p style={{ fontSize: "16px", fontWeight: 600, color: "#F5F3EF" }}>
+                <p style={{ fontSize: "16px", fontWeight: 600, color: "var(--ink)" }}>
                   Muhammad Afrith
                 </p>
-                <p style={{ fontSize: "14px", color: "#A8A49C", marginTop: "6px", maxWidth: "46ch" }}>
+                <p style={{ fontSize: "14px", color: "var(--ink-2)", marginTop: "6px", maxWidth: "46ch" }}>
                   Building premium, scalable digital products with modern full-stack and mobile
                   technologies.
                 </p>
@@ -1510,7 +1399,7 @@ export default function Home() {
                 gap: "16px",
               }}
             >
-              <span style={{ fontSize: "13px", color: "#6E6A63" }}>
+              <span style={{ fontSize: "13px", color: "light-dark(#56534f, #6E6A63)" }}>
                 © 2026 Muhammad Afrith. All rights reserved.
               </span>
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>

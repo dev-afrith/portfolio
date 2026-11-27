@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type { ProjectItem } from "@/data/projects";
@@ -173,7 +172,7 @@ export default function ProjectDetailsModal({ project, onClose }: ProjectDetails
             onClick={(e) => e.stopPropagation()}
           >
             <div className="aw-pmodal-topbar">
-              <span className="aw-label" style={{ color: "#E8B77C" }}>
+              <span className="aw-label" style={{ color: "var(--gold-text)" }}>
                 {project.idx} · {project.category}
               </span>
               <button
@@ -242,7 +241,7 @@ export default function ProjectDetailsModal({ project, onClose }: ProjectDetails
 
                 <h3
                   className="aw-label"
-                  style={{ color: "#F5F3EF", marginTop: "24px", letterSpacing: "0.18em" }}
+                  style={{ color: "var(--ink)", marginTop: "24px", letterSpacing: "0.18em" }}
                 >
                   TECHNOLOGY STACK
                 </h3>
@@ -288,17 +287,10 @@ export default function ProjectDetailsModal({ project, onClose }: ProjectDetails
                       GitHub ↗
                     </a>
                   )}
-                  <Link
-                    href={`/projects/${project.slug}`}
-                    className="aw-btn-secondary"
-                    onClick={onClose}
-                  >
-                    Case Study Page →
-                  </Link>
                 </div>
 
                 {project.apkMeta && (
-                  <p className="aw-label" style={{ color: "#858078", marginTop: "12px" }}>
+                  <p className="aw-label" style={{ color: "var(--ink-3)", marginTop: "12px" }}>
                     {project.apkMeta}
                   </p>
                 )}

@@ -110,7 +110,7 @@ export default function ProjectScreenshotGallery({
     <section className="aw-gallery-wrap" aria-label={`${title} screenshot gallery`}>
       <div className="aw-gallery-head">
         <div>
-          <p className="aw-label" style={{ color: "#E8B77C" }}>
+          <p className="aw-label" style={{ color: "var(--gold-text)" }}>
             SCREENSHOTS
           </p>
           <p className="aw-gallery-sub">Interface views &amp; visual frames</p>
@@ -181,7 +181,7 @@ export default function ProjectScreenshotGallery({
               )}
             </div>
             <div className="aw-gallery-caption">
-              <span className="aw-label" style={{ color: "#858078" }}>
+              <span className="aw-label" style={{ color: "var(--ink-3)" }}>
                 0{i + 1}
               </span>
               <span className="aw-gallery-caption-text">{frame.label}</span>
@@ -203,7 +203,7 @@ export default function ProjectScreenshotGallery({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="aw-pmodal-topbar">
-              <span className="aw-label" style={{ color: "#E8B77C" }}>
+              <span className="aw-label" style={{ color: "var(--gold-text)" }}>
                 {lightboxFrame.label}
               </span>
               <button

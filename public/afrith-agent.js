@@ -9,18 +9,16 @@
   var FORMSPREE = (scriptEl && scriptEl.getAttribute("data-formspree")) || "";
   var EMAIL = "afrithafrith1507@gmail.com";
   var BUBBLE_STORAGE_KEY = "afrith_agent_bubble_dismissed";
-  var OUT_OF_SCOPE_REPLY =
-    "I'm here to tell you about Afrith — ask me something related to that. For detailed information, contact him below.";
   var FALLBACK_SUGGESTIONS = [
     "What has he built?",
     "What's his tech stack?",
     "How do I contact him?",
   ];
   var SUGGESTIONS = [
-    "What has Afrith built?",
-    "Tell me about BloodLink",
-    "What's his tech stack?",
-    "How do I contact him?",
+    "Which projects can I try?",
+    "What did Afrith build with Flutter?",
+    "Tell me about his internships",
+    "Where can I find his résumé?",
   ];
 
   var state = {
@@ -30,6 +28,7 @@
     lastQuestion: "",
     formOpen: false,
     abortController: null,
+    conversationId: 0,
   };
 
   function escapeHtml(str) {
@@ -47,31 +46,85 @@
     return "#";
   }
 
-  function renderMarkdown(raw) {
-    var escaped = escapeHtml(raw);
-    var lines = escaped.split(/\r?\n/);
+  function renderMarkdown(raw, streaming) {
+    var lines = raw.split(/\r?\n/);
     var out = [];
     var inList = false;
 
     function formatInline(text) {
-      text = text.replace(/`([^`]+)`/g, "<code>$1</code>");
-      text = text.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-      text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, function (_, label, url) {
-        var safe = sanitizeUrl(url);
-        return (
-          '<a href="' +
-          escapeHtml(safe) +
-          '" target="_blank" rel="noopener noreferrer">' +
-          label +
-          "</a>"
-        );
+      var tokens = /\[([^\]]+)\]\(([^)]+)\)|\x60([^\x60]+)\x60|\*\*([^*]+)\*\*/g;
+      var html = "";
+      var end = 0;
+
+      for (var match of text.matchAll(tokens)) {
+        html += escapeHtml(text.slice(end, match.index));
+        if (match[1] !== undefined) {
+          var url = sanitizeUrl(match[2]);
+          var label = escapeHtml(match[1]);
+          html += url === "#" ? label : (
+            '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener noreferrer">' + label + "</a>"
+          );
+        } else if (match[3] !== undefined) {
+          html += "<code>" + escapeHtml(match[3]) + "</code>";
+        } else {
+          html += "<strong>" + escapeHtml(match[4]) + "</strong>";
+        }
+        end = match.index + match[0].length;
+      }
+      return html + escapeHtml(text.slice(end));
+    }
+
+    function splitTableRow(line) {
+      var row = line.trim().replace(/^\\?\|/, "").replace(/\\?\|$/, "");
+      return row.split(/(?<!\\)\|/).map(function (cell) {
+        return cell.trim().replace(/\\\|/g, "|");
       });
-      return text;
+    }
+
+    function nextContentLine(index) {
+      while (index < lines.length && !lines[index].trim()) index++;
+      return index;
     }
 
     for (var i = 0; i < lines.length; i++) {
       var line = lines[i];
-      var bulletMatch = line.match(/^\s*[-*]\s+(.+)$/);
+      if (line.includes("|")) {
+        var heading = splitTableRow(line);
+        var dividerIndex = nextContentLine(i + 1);
+        var divider = splitTableRow(lines[dividerIndex] || "");
+        if (
+          heading.length > 1 &&
+          divider.length === heading.length &&
+          divider.every(function (cell) { return /^:?-{3,}:?$/.test(cell); })
+        ) {
+          if (inList) {
+            out.push("</ul>");
+            inList = false;
+          }
+          var cards = [];
+          i = dividerIndex;
+          for (var rowIndex = nextContentLine(i + 1); rowIndex < lines.length; rowIndex = nextContentLine(i + 1)) {
+            if (!lines[rowIndex].includes("|")) break;
+            var cells = splitTableRow(lines[rowIndex]);
+            if (cells.length !== heading.length) break;
+            var fields = cells.slice(1).map(function (cell, index) {
+              if (!cell) return "";
+              return '<div class="aa-answer-field"><dt>' + formatInline(heading[index + 1]) +
+                "</dt><dd>" + formatInline(cell) + "</dd></div>";
+            }).join("");
+            cards.push('<div class="aa-answer-card"><p class="aa-answer-title">' +
+              formatInline(cells[0]) + "</p><dl>" + fields + "</dl></div>");
+            i = rowIndex;
+          }
+          if (cards.length) out.push('<div class="aa-answer-cards">' + cards.join("") + "</div>");
+          // Hide an unfinished table row until its remaining cells arrive.
+          var nextRow = nextContentLine(i + 1);
+          if (streaming && nextRow === lines.length - 1 && /^\\?\|/.test(lines[nextRow].trim())) i = nextRow;
+          continue;
+        }
+        if (streaming && /^\s*\\?\|/.test(line)) continue;
+      }
+      var bulletMatch = line.match(/^\s*(?:[-*•]|\d+[.)])\s+(.+)$/);
       if (bulletMatch) {
         if (!inList) {
           out.push("<ul>");
@@ -126,7 +179,9 @@
       ".aa-icon-btn { width: 30px; height: 30px; border-radius: 8px; border: none; background: transparent; color: #a1a1aa; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s; }",
       ".aa-icon-btn:hover { background: rgba(255,255,255,0.08); color: #fafafa; }",
       ".aa-icon-btn:focus-visible, .aa-contact-link:focus-visible, .aa-chip:focus-visible, .aa-send-btn:focus-visible, .aa-form-btn:focus-visible, .aa-oos-btn:focus-visible { outline: 2px solid var(--gold-2); outline-offset: 1px; }",
-      ".aa-messages { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 14px 14px 8px; display: flex; flex-direction: column; gap: 10px; scroll-behavior: smooth; }",
+      ".aa-messages { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 14px 14px 8px; display: flex; flex-direction: column; gap: 10px; }",
+      ".aa-messages > * { flex-shrink: 0; }",
+      ".aa-messages:focus-visible { outline: 2px solid var(--gold-2); outline-offset: -2px; }",
       ".aa-messages::-webkit-scrollbar { width: 5px; }",
       ".aa-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 9999px; }",
       ".aa-empty-note { font-size: 13px; color: #a1a1aa; line-height: 1.5; padding: 4px 2px 6px; }",
@@ -141,6 +196,12 @@
       ".aa-msg-row.aa-assistant .aa-msg { background: rgba(255,255,255,0.07); color: #e4e4e7; border: 1px solid rgba(255,255,255,0.06); border-radius: 16px 16px 16px 4px; }",
       ".aa-msg p { margin: 0 0 6px; }",
       ".aa-msg p:last-child { margin-bottom: 0; }",
+      ".aa-answer-cards { display: grid; gap: 8px; margin: 8px 0; }",
+      ".aa-answer-card { padding: 10px 12px; border: 1px solid var(--assistant-line, rgba(255,255,255,0.14)); border-radius: 12px; background: var(--assistant-fill, rgba(0,0,0,0.12)); }",
+      ".aa-msg .aa-answer-title { font-weight: 650; margin: 0 0 6px; }",
+      ".aa-answer-card dl, .aa-answer-card dd { margin: 0; }",
+      ".aa-answer-field + .aa-answer-field { margin-top: 6px; }",
+      ".aa-answer-field dt { font-size: 11px; font-weight: 600; opacity: 0.8; }",
       ".aa-msg ul { margin: 4px 0 6px 16px; padding: 0; }",
       ".aa-msg ul:last-child { margin-bottom: 0; }",
       ".aa-msg li { margin-bottom: 3px; }",
@@ -212,14 +273,14 @@
   var root = document.createElement("div");
   root.id = "afrith-agent-root";
   root.innerHTML = [
-    '<div class="aa-bubble" id="aa-bubble" role="status">Ask me anything about Afrith</div>',
-    '<div class="aa-panel" id="aa-panel" role="dialog" aria-modal="false" aria-label="Ask about Afrith" aria-hidden="true">',
+    '<div class="aa-bubble" id="aa-bubble" role="status">Explore Afrith’s portfolio</div>',
+    '<div class="aa-panel" id="aa-panel" role="dialog" aria-modal="false" aria-label="Portfolio assistant" aria-hidden="true" data-lenis-prevent inert>',
     '  <div class="aa-header">',
     '    <div class="aa-header-left">',
     '      <div class="aa-avatar" aria-hidden="true">MA</div>',
     '      <div class="aa-title-wrap">',
-    '        <div class="aa-title">Ask about Afrith</div>',
-    '        <div class="aa-subtitle"><span class="aa-live-dot" aria-hidden="true"></span>AI Assistant</div>',
+    '        <div class="aa-title">Portfolio assistant</div>',
+    '        <div class="aa-subtitle"><span class="aa-live-dot" aria-hidden="true"></span>About Muhammad Afrith</div>',
     "      </div>",
     "    </div>",
     '    <div class="aa-header-actions">',
@@ -232,7 +293,7 @@
       "</button>",
     "    </div>",
     "  </div>",
-    '  <div class="aa-messages" id="aa-messages" aria-live="polite" aria-relevant="additions"></div>',
+    '  <div class="aa-messages" id="aa-messages" role="log" aria-label="Chat messages" tabindex="0" aria-live="polite" aria-relevant="additions"></div>',
     '  <div class="aa-composer-wrap" id="aa-composer-wrap">',
     '    <div class="aa-composer">',
     '      <textarea class="aa-input" id="aa-input" rows="1" maxlength="900" placeholder="Ask about projects, skills, or experience..." aria-label="Message Afrith\'s AI Agent"></textarea>',
@@ -243,7 +304,7 @@
     "  </div>",
     '  <div class="aa-form-wrap" id="aa-form-wrap" hidden></div>',
     "</div>",
-    '<button type="button" class="aa-launcher" id="aa-launcher" aria-label="Afrith\'s AI Agent" title="Afrith\'s AI Agent" aria-expanded="false">',
+    '<button type="button" class="aa-launcher" id="aa-launcher" aria-label="Afrith\'s AI Agent" title="Afrith\'s AI Agent" aria-expanded="false" aria-controls="aa-panel">',
     '  <span class="aa-launcher-ma" aria-hidden="true">MA</span>',
     '  <span class="aa-online-dot" aria-hidden="true"></span>',
     "</button>",
@@ -267,8 +328,12 @@
     messagesEl.innerHTML = "";
     var note = document.createElement("div");
     note.className = "aa-empty-note";
-    note.textContent =
-      "Hi! Ask me anything about Muhammad Afrith's projects, tech stack, internships, or how to reach him.";
+    var title = document.createElement("strong");
+    title.textContent = "What would you like to know?";
+    note.appendChild(title);
+    var description = document.createElement("p");
+    description.textContent = "Explore Afrith’s projects, skills, internships, or ways to get in touch.";
+    note.appendChild(description);
     messagesEl.appendChild(note);
 
     var chips = document.createElement("div");
@@ -294,16 +359,22 @@
     if (note) note.remove();
   }
 
-  function scrollIfNearBottom(force) {
-    if (
-      force ||
-      messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight <= 120
-    ) {
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
+  function isNearBottom() {
+    return messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight <= 48;
+  }
+
+  function scrollToLatest() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function renderReply(bubble, text, streaming) {
+    var followReply = isNearBottom();
+    bubble.innerHTML = renderMarkdown(text, streaming);
+    if (followReply) scrollToLatest();
   }
 
   function appendMessage(role, content, isLoading) {
+    var followReply = role === "user" || isNearBottom();
     removeEmptyState();
     var row = document.createElement("div");
     row.className = "aa-msg-row " + (role === "user" ? "aa-user" : "aa-assistant");
@@ -319,7 +390,7 @@
     }
     row.appendChild(msg);
     messagesEl.appendChild(row);
-    scrollIfNearBottom(role === "user");
+    if (followReply) scrollToLatest();
     return msg;
   }
 
@@ -538,6 +609,7 @@
     var accumulated = "";
     var errored = false;
     var suggestions = null;
+    var offTopic = false;
 
     function markError() {
       if (errored) return true;
@@ -562,7 +634,8 @@
           if (json && json.reply && !json.error) {
             accumulated = json.reply;
             if (Array.isArray(json.suggestions)) suggestions = json.suggestions;
-            assistantBubble.innerHTML = renderMarkdown(accumulated);
+            offTopic = json.offTopic === true;
+            renderReply(assistantBubble, accumulated);
           } else {
             markError();
           }
@@ -591,11 +664,11 @@
                 }
                 if (typeof evt.delta === "string" && evt.delta.length > 0) {
                   accumulated += evt.delta;
-                  assistantBubble.innerHTML = renderMarkdown(accumulated);
+                  renderReply(assistantBubble, accumulated, true);
                   assistantBubble.classList.add("aa-caret");
-                  scrollIfNearBottom(false);
                 }
                 if (evt.done) {
+                  offTopic = evt.offTopic === true;
                   if (typeof evt.reply === "string" && evt.reply.trim()) {
                     accumulated = evt.reply;
                   }
@@ -614,14 +687,15 @@
       markError();
     } finally {
       clearTimeout(timeoutId);
-      state.abortController = null;
+      if (state.abortController === controller) state.abortController = null;
       assistantBubble.classList.remove("aa-caret");
     }
 
-    return { hardError: errored, reply: accumulated.trim(), suggestions: suggestions };
+    return { hardError: errored, reply: accumulated.trim(), suggestions: suggestions, offTopic: offTopic };
   }
 
   function renderFollowUps(items) {
+    var followReply = isNearBottom();
     var existing = messagesEl.querySelector(".aa-followups");
     if (existing) existing.remove();
     var rawList = Array.isArray(items) ? items : [];
@@ -651,7 +725,7 @@
       wrap.appendChild(btn);
     });
     messagesEl.appendChild(wrap);
-    scrollIfNearBottom(false);
+    if (followReply) scrollToLatest();
   }
 
   var PLEASANT_WORDS = [
@@ -705,7 +779,9 @@
     btn.addEventListener("click", function () {
       showContactForm({ isFallback: isFallback, question: question });
     });
+    var followReply = isNearBottom();
     bubbleEl.appendChild(btn);
+    if (followReply) scrollToLatest();
   }
 
   async function ask(question) {
@@ -718,6 +794,7 @@
     var oldFollow = messagesEl.querySelector(".aa-followups");
     if (oldFollow) oldFollow.remove();
 
+    var conversationId = state.conversationId;
     state.lastQuestion = text;
     inputEl.value = "";
     autoResizeInput();
@@ -725,9 +802,7 @@
 
     appendMessage("user", text, false);
     state.history.push({ role: "user", content: text });
-    if (state.history.length > 10) {
-      state.history = state.history.slice(state.history.length - 10);
-    }
+    state.history = state.history.slice(-9);
 
     var canned = matchPleasantry(text);
     if (canned) {
@@ -742,31 +817,23 @@
     var assistantBubble = appendMessage("assistant", "", true);
 
     var result = await fetchReplyOnce(assistantBubble);
+    if (conversationId !== state.conversationId) return;
     if (!result.hardError && !result.reply) {
       result = await fetchReplyOnce(assistantBubble);
+      if (conversationId !== state.conversationId) return;
     }
 
     state.isStreaming = false;
     updateSendButton();
 
     if (result.hardError || !result.reply) {
-      assistantBubble.innerHTML = renderMarkdown(
-        "I can't answer right now. You can message Afrith directly."
-      );
-      appendContactButton(assistantBubble, true, text);
-      scrollIfNearBottom(false);
+      renderReply(assistantBubble, "The assistant is temporarily unavailable. Try sending your question again.");
+      renderFollowUps(FALLBACK_SUGGESTIONS);
       return;
     }
 
-    if (result.reply === OUT_OF_SCOPE_REPLY) {
-      assistantBubble.innerHTML = renderMarkdown(OUT_OF_SCOPE_REPLY);
-      appendContactButton(assistantBubble, false, text);
-      state.history.push({ role: "assistant", content: result.reply });
-      scrollIfNearBottom(false);
-      return;
-    }
-
-    assistantBubble.innerHTML = renderMarkdown(result.reply);
+    renderReply(assistantBubble, result.reply);
+    if (result.offTopic) appendContactButton(assistantBubble, false, text);
     state.history.push({ role: "assistant", content: result.reply });
     renderFollowUps(result.suggestions);
   }
@@ -781,11 +848,13 @@
   function open() {
     if (state.isOpen) return;
     state.isOpen = true;
+    panel.inert = false;
     panel.classList.add("aa-open");
     panel.setAttribute("aria-hidden", "false");
     launcher.setAttribute("aria-expanded", "true");
     dismissBubble();
     setTimeout(function () {
+      if (!state.isOpen) return;
       if (state.formOpen) {
         var nameInput = document.getElementById("aa-f-name");
         if (nameInput) nameInput.focus();
@@ -799,6 +868,7 @@
     if (!state.isOpen) return;
     state.isOpen = false;
     panel.classList.remove("aa-open");
+    panel.inert = true;
     panel.setAttribute("aria-hidden", "true");
     launcher.setAttribute("aria-expanded", "false");
     launcher.focus();
@@ -810,8 +880,10 @@
   }
 
   function resetChat() {
+    state.conversationId += 1;
     if (state.abortController) {
       state.abortController.abort();
+      state.abortController = null;
     }
     state.history = [];
     state.lastQuestion = "";

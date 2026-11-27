@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ClientShell from "@/components/ClientShell";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
@@ -110,9 +111,10 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
         />
+        <meta name="theme-color" content="#08080A" />
         <script
           dangerouslySetInnerHTML={{
-            __html: "try { if (localStorage.getItem('theme') === 'light') { document.documentElement.classList.remove('dark'); } else { document.documentElement.classList.add('dark'); } } catch(e) { document.documentElement.classList.add('dark'); } document.documentElement.classList.add('js');",
+            __html: "try { if (localStorage.getItem('theme') === 'light') { document.documentElement.classList.remove('dark'); document.querySelector('meta[name=theme-color]').content='#ffffff'; } else { document.documentElement.classList.add('dark'); } } catch(e) { document.documentElement.classList.add('dark'); } document.documentElement.classList.add('js');",
           }}
         />
         <noscript>
@@ -129,7 +131,6 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
         <link rel="icon" href="/favicon.ico" />
-        <meta name="theme-color" content="#08080A" />
       </head>
       <body>
         <a href="#main-content" className="aw-skip-link">
