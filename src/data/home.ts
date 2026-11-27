@@ -6,7 +6,7 @@ export const SKILL_BOXES = [
     a45: "rgba(232, 183, 124, 0.45)",
     a25: "rgba(232, 183, 124, 0.25)",
     a18: "rgba(232, 183, 124, 0.18)",
-    items: ["React.js", "Next.js", "JavaScript", "TypeScript", "Tailwind CSS"],
+    items: ["React.js", "Next.js", "JavaScript", "TypeScript", "Tailwind CSS", "React Hooks", "Responsive UI"],
   },
   {
     title: "Backend Development",
@@ -15,7 +15,7 @@ export const SKILL_BOXES = [
     a45: "rgba(143, 184, 240, 0.45)",
     a25: "rgba(143, 184, 240, 0.25)",
     a18: "rgba(143, 184, 240, 0.18)",
-    items: ["Node.js", "Express.js", "REST APIs"],
+    items: ["Node.js", "Express.js", "REST APIs", "Express Routing", "API Integration"],
   },
   {
     title: "Mobile Development",
@@ -33,7 +33,7 @@ export const SKILL_BOXES = [
     a45: "rgba(201, 166, 240, 0.45)",
     a25: "rgba(201, 166, 240, 0.25)",
     a18: "rgba(201, 166, 240, 0.18)",
-    items: ["MongoDB", "MySQL", "PostgreSQL", "Firebase"],
+    items: ["MongoDB", "MySQL", "PostgreSQL", "Firebase", "MongoDB CRUD", "Document Modeling"],
   },
   {
     title: "Build & Deployment Tools",
@@ -47,6 +47,23 @@ export const SKILL_BOXES = [
 ];
 
 export const EXPERIENCES = [
+  {
+    date: "MAY 2026 — JUNE 2026",
+    role: "MERN Stack Development Intern",
+    company: "CodeBonding Technologies · Salem",
+    badge: "DEVELOPMENT",
+    badgeStyle: {
+      color: "light-dark(#246444, #7FCFA8)",
+      background: "rgba(127, 207, 168, 0.12)",
+      border: "1px solid rgba(127, 207, 168, 0.28)",
+    },
+    bullets: [
+      "Focused on building responsive interfaces with React",
+      "Practiced creating REST endpoints with Node.js and Express.js",
+      "Worked with MongoDB documents and CRUD operations",
+      "Connected frontend components to backend APIs",
+    ],
+  },
   {
     date: "MARCH 2026 — APRIL 2026",
     role: "Mobile App Development Intern",

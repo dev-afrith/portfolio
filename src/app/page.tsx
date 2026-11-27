@@ -9,6 +9,8 @@ import { EXPERIENCES, SKILL_BOXES } from "@/data/home";
 import TiltCard from "@/components/TiltCard";
 import ProjectDetailsModal from "@/components/ProjectDetailsModal";
 
+const skillCount = new Set(SKILL_BOXES.flatMap((box) => box.items)).size;
+
 const HeroCanvas = dynamic(() => import("@/components/HeroCanvas"), {
   ssr: false,
 });
@@ -883,8 +885,8 @@ export default function Home() {
             <div className="aw-stats-row">
               {[
                 ["9", "PROJECTS"],
-                ["21+", "TECHNOLOGIES"],
-                ["2", "EXPERIENCE ENTRIES"],
+                [String(skillCount), "TECHNOLOGIES & SKILLS"],
+                [String(EXPERIENCES.length), "EXPERIENCE ENTRIES"],
                 ["Dharmapuri", "LOCATION"],
               ].map(([val, label]) => (
                 <TiltCard key={label} className="aw-stat-card aw-reveal" maxTilt={4} onPointerMove={handleCardGlow}>
@@ -1092,7 +1094,7 @@ export default function Home() {
                     <div className="aw-skill-icon" style={{ background: box.bg }}>
                       <SkillCategoryIcon title={box.title} color={box.dot} />
                     </div>
-                    <span className="aw-skill-count" style={{ color: box.dot }}>
+                    <span className="aw-skill-count">
                       {String(box.items.length).padStart(2, "0")}
                     </span>
                   </div>
@@ -1382,8 +1384,7 @@ export default function Home() {
                   e.preventDefault();
                   document.getElementById("c-name")?.focus();
                 }}
-                className="aw-btn-secondary"
-                style={{ height: "44px", padding: "0 22px", fontSize: "14px" }}
+                className="aw-btn-secondary aw-conversation-cta"
               >
                 Start a Conversation
               </a>

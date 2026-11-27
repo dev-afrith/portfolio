@@ -17,7 +17,7 @@
   var SUGGESTIONS = [
     "Which projects can I try?",
     "What did Afrith build with Flutter?",
-    "Tell me about his internships",
+    "What did he do in his MERN internship?",
     "Where can I find his résumé?",
   ];
 
@@ -337,8 +337,10 @@
     messagesEl.appendChild(note);
 
     var chips = document.createElement("div");
-    chips.className = "aa-chips";
+    chips.className = "aa-chips aa-starter-grid";
     chips.id = "aa-chips";
+    chips.setAttribute("role", "group");
+    chips.setAttribute("aria-label", "Suggested questions");
     SUGGESTIONS.forEach(function (q) {
       var btn = document.createElement("button");
       btn.type = "button";
