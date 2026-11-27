@@ -1,28 +1,5 @@
 import type { Metadata } from "next";
-import { Inter_Tight, Inter, JetBrains_Mono } from "next/font/google";
-import AmbientBg from "@/components/AmbientBg";
-import "./globals.css";
-
-const interTight = Inter_Tight({
-  subsets: ["latin"],
-  weight: ["600", "700"],
-  display: "swap",
-  variable: "--font-display",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-  variable: "--font-body",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-  variable: "--font-mono",
-});
+import ClientShell from "@/components/ClientShell";
 
 export const metadata: Metadata = {
   title: {
@@ -123,19 +100,24 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${interTight.variable} ${inter.variable} ${jetbrainsMono.variable}`}
-      style={{ backgroundColor: "#08080A" }}
       suppressHydrationWarning
     >
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+        />
         <script
           dangerouslySetInnerHTML={{
-            __html: "document.documentElement.classList.add('js');",
+            __html: "try { if (localStorage.getItem('theme') === 'light') { document.documentElement.classList.remove('dark'); } else { document.documentElement.classList.add('dark'); } } catch(e) { document.documentElement.classList.add('dark'); } document.documentElement.classList.add('js');",
           }}
         />
         <noscript>
           <style>
-            {"[data-reveal],.aw-fade-up,.aw-word,.aw-eyebrow-rule{opacity:1!important;transform:none!important;animation:none!important;}"}
+            {"[data-reveal],.aw-reveal,.aw-fade-up,.aw-word,.aw-eyebrow-rule{opacity:1!important;transform:none!important;animation:none!important;}"}
           </style>
         </noscript>
         <script
@@ -149,12 +131,11 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <meta name="theme-color" content="#08080A" />
       </head>
-      <body style={{ backgroundColor: "#08080A", color: "#F5F3EF" }}>
+      <body>
         <a href="#main-content" className="aw-skip-link">
           Skip to content
         </a>
-        <AmbientBg />
-        {children}
+        <ClientShell>{children}</ClientShell>
         <script src="/afrith-agent.js" data-endpoint="/api/chat" data-formspree="https://formspree.io/f/mojkqbgy" defer></script>
       </body>
     </html>

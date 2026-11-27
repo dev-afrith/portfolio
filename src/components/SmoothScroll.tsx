@@ -12,7 +12,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     }
 
     const lenis = new Lenis({
-      duration: 1,
+      duration: 1.05,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
@@ -27,16 +27,20 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
 
     rafId = requestAnimationFrame(raf);
 
-    // Handle anchor links for smooth scroll to sections
     const handleAnchorClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const anchor = target.closest("a");
-      if (anchor && anchor.hash) {
+      if (e.defaultPrevented) return;
+      const target = e.target as HTMLElement | null;
+      const anchor = target?.closest("a");
+      if (!anchor || !anchor.hash) return;
+
+      const url = new URL(anchor.href, window.location.href);
+      if (url.pathname !== window.location.pathname) return;
+
+      const element = document.querySelector(anchor.hash);
+      if (element) {
         e.preventDefault();
-        const element = document.querySelector(anchor.hash);
-        if (element) {
-          lenis.scrollTo(element as HTMLElement, { offset: -80 });
-        }
+        lenis.resize();
+        lenis.scrollTo(element as HTMLElement, { offset: -80 });
       }
     };
 

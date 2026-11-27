@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import MobileProjectNav from "@/components/MobileProjectNav";
+import ProjectScreenshotGallery from "@/components/ProjectScreenshotGallery";
 import { PROJECTS } from "@/data/projects";
 
 export function generateStaticParams() {
@@ -37,6 +39,72 @@ export async function generateMetadata({
       ],
     },
   };
+}
+
+function TechStackIcon({ name }: { name: string }) {
+  const s = { width: 17, height: 17, flexShrink: 0 } as const;
+  const lower = name.toLowerCase();
+  if (lower.includes("react")) {
+    return (
+      <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <circle cx="12" cy="12" r="2" fill="currentColor" />
+        <ellipse cx="12" cy="12" rx="10" ry="4" />
+        <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)" />
+        <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)" />
+      </svg>
+    );
+  }
+  if (lower.includes("next") || lower.includes("vercel")) {
+    return (
+      <svg style={s} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <polygon points="12,3 22,20 2,20" />
+      </svg>
+    );
+  }
+  if (lower.includes("tailwind")) {
+    return (
+      <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+        <path d="M4 10c2-3 5-3 7 0s5 3 9 0" />
+        <path d="M4 16c2-3 5-3 7 0s5 3 9 0" />
+      </svg>
+    );
+  }
+  if (lower.includes("vite")) {
+    return (
+      <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" aria-hidden="true">
+        <polygon points="13,2 4,14 11,14 10,22 20,10 13,10" />
+      </svg>
+    );
+  }
+  if (lower.includes("flutter")) {
+    return (
+      <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" aria-hidden="true">
+        <path d="M14 3 5 12l3 3L20 3h-6Z" />
+        <path d="M14 13 9 18l5 3h6l-6-8Z" />
+      </svg>
+    );
+  }
+  if (lower.includes("node") || lower.includes("docker")) {
+    return (
+      <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+        <polygon points="12,2 21,7 21,17 12,22 3,17 3,7" />
+      </svg>
+    );
+  }
+  if (lower.includes("mongo") || lower.includes("mysql") || lower.includes("postgres") || lower.includes("sql") || lower.includes("firebase")) {
+    return (
+      <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+        <ellipse cx="12" cy="6" rx="8" ry="3" />
+        <path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6" />
+        <path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3" />
+      </svg>
+    );
+  }
+  return (
+    <span style={{ fontSize: "13px", fontWeight: 700, lineHeight: 1 }} aria-hidden="true">
+      {name.slice(0, 1).toUpperCase()}
+    </span>
+  );
 }
 
 export default async function ProjectPage({
@@ -81,6 +149,7 @@ export default async function ProjectPage({
             <Link href="/#contact" className="aw-nav-link">Contact</Link>
           </nav>
         </div>
+        <MobileProjectNav />
       </header>
 
       <main id="main-content" className="aw-section" style={{ paddingTop: "48px" }}>
@@ -89,17 +158,23 @@ export default async function ProjectPage({
             ← Back to all work
           </Link>
 
-          <div style={{ marginTop: "32px", borderRadius: "20px", overflow: "hidden", border: "1px solid var(--line)" }}>
+          <div className="aw-fade-up aw-project-cover">
             <Image
               src={project.cover}
               alt={project.alt}
               width={1200}
-              height={750}
+              height={675}
               sizes="(max-width: 920px) 100vw, 920px"
               priority
-              style={{ width: "100%", height: "auto", maxHeight: "440px", objectFit: "cover", objectPosition: "top", display: "block" }}
             />
           </div>
+
+          <ProjectScreenshotGallery
+            slug={project.slug}
+            title={project.title}
+            cover={project.cover}
+            alt={project.alt}
+          />
 
           <p className="aw-label" style={{ marginTop: "28px" }}>
             {project.idx} — {project.category}
@@ -134,14 +209,17 @@ export default async function ProjectPage({
             </div>
           </div>
 
-          <h2 className="aw-label" style={{ color: "#F5F3EF", marginTop: "28px", letterSpacing: "0.18em" }}>
+          <h2 className="aw-label" style={{ color: "#F5F3EF", marginTop: "34px", letterSpacing: "0.18em" }}>
             TECH STACK
           </h2>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "12px" }}>
+          <div className="aw-project-stack-grid">
             {project.stack.map((t) => (
-              <span key={t} className="aw-chip">
-                {t}
-              </span>
+              <div key={t} className="aw-project-stack-card">
+                <span className="aw-project-stack-icon">
+                  <TechStackIcon name={t} />
+                </span>
+                <span className="aw-project-stack-name">{t}</span>
+              </div>
             ))}
           </div>
 

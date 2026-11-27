@@ -1,9 +1,22 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { PROJECTS } from "@/data/projects";
+import { PROJECTS, type ProjectItem } from "@/data/projects";
+import TiltCard from "@/components/TiltCard";
+import ProjectDetailsModal from "@/components/ProjectDetailsModal";
+
+const HeroCanvas = dynamic(() => import("@/components/HeroCanvas"), {
+  ssr: false,
+});
+
+function handleCardGlow(e: React.PointerEvent<HTMLElement>) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty("--card-mx", `${(e.clientX - rect.left).toFixed(1)}px`);
+  e.currentTarget.style.setProperty("--card-my", `${(e.clientY - rect.top).toFixed(1)}px`);
+}
 
 const SKILL_BOXES = [
   {
@@ -53,8 +66,53 @@ const SKILL_BOXES = [
   },
 ];
 
+function SkillCategoryIcon({ title, color }: { title: string; color: string }) {
+  const s = { width: 20, height: 20, flexShrink: 0, color } as const;
+  switch (title) {
+    case "Frontend Development":
+      return (
+        <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
+        </svg>
+      );
+    case "Backend Development":
+      return (
+        <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="6" rx="2" />
+          <rect x="3" y="14" width="18" height="6" rx="2" />
+          <line x1="7" y1="7" x2="7.01" y2="7" />
+          <line x1="7" y1="17" x2="7.01" y2="17" />
+        </svg>
+      );
+    case "Mobile Development":
+      return (
+        <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <rect x="6" y="2" width="12" height="20" rx="3" />
+          <line x1="12" y1="18" x2="12.01" y2="18" />
+        </svg>
+      );
+    case "Database & Cloud":
+      return (
+        <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <ellipse cx="12" cy="5" rx="8" ry="3" />
+          <path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5" />
+          <path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6" />
+        </svg>
+      );
+    default:
+      return (
+        <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M12 2 2 7l10 5 10-5-10-5Z" />
+          <path d="m2 17 10 5 10-5" />
+          <path d="m2 12 10 5 10-5" />
+        </svg>
+      );
+  }
+}
+
 function TechLogo({ name, color }: { name: string; color: string }) {
-  const s = { width: 14, height: 14, flexShrink: 0, color, opacity: 0.7 } as const;
+  const s = { width: 14, height: 14, flexShrink: 0, color, opacity: 0.85 } as const;
   switch (name) {
     case "React":
     case "React.js":
@@ -81,24 +139,51 @@ function TechLogo({ name, color }: { name: string; color: string }) {
           <path d="M4 16c2-3 5-3 7 0s5 3 9 0" />
         </svg>
       );
+    case "JavaScript":
+    case "TypeScript":
+      return (
+        <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="3" />
+          <path d={name === "TypeScript" ? "M8 10h8M12 10v7" : "M10 9v6a2 2 0 0 1-2 2M16 11a2 2 0 1 0 0 4 2 2 0 0 1 0 3"} strokeLinecap="round" />
+        </svg>
+      );
     case "Vite":
+    case "Firebase":
       return (
         <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" aria-hidden="true">
           <polygon points="13,2 4,14 11,14 10,22 20,10 13,10" />
         </svg>
       );
     case "Flutter":
+    case "Dart":
       return (
         <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" aria-hidden="true">
           <path d="M14 3 5 12l3 3L20 3h-6Z" />
           <path d="M14 13 9 18l5 3h6l-6-8Z" />
         </svg>
       );
+    case "Android Studio":
+      return (
+        <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <rect x="6" y="3" width="12" height="18" rx="2.5" />
+          <line x1="10" y1="6" x2="14" y2="6" />
+          <circle cx="12" cy="17" r="1" fill="currentColor" />
+        </svg>
+      );
     case "Node.js":
     case "Docker":
+    case "Express.js":
       return (
         <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
           <polygon points="12,2 21,7 21,17 12,22 3,17 3,7" />
+        </svg>
+      );
+    case "REST APIs":
+    case "Netlify":
+      return (
+        <svg style={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
         </svg>
       );
     case "PostgreSQL":
@@ -137,7 +222,7 @@ function TechLogo({ name, color }: { name: string; color: string }) {
             lineHeight: 1,
             flexShrink: 0,
             color,
-            opacity: 0.7,
+            opacity: 0.75,
           }}
           aria-hidden="true"
         >
@@ -247,21 +332,57 @@ function DownloadIcon() {
   );
 }
 
+function SunIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+  );
+}
+
 export default function Home() {
   const [activeNav, setActiveNav] = useState("about");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isDark, setIsDark] = useState(() => (typeof window !== "undefined" ? document.documentElement.classList.contains("dark") : true));
   const [form, setForm] = useState({ name: "", email: "", mobile: "", subject: "", message: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [activeIdx, setActiveIdx] = useState(0);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
   const [scrollPct, setScrollPct] = useState(11.1);
+  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
+  const projectsSectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const wheelTargetRef = useRef<number | null>(null);
+  const wheelRafRef = useRef<number>(0);
+
+
+
+  const toggleTheme = () => {
+    const nextDark = !isDark;
+    setIsDark(nextDark);
+    if (nextDark) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
 
   const syncCarousel = () => {
     const el = trackRef.current;
     if (!el) return;
-    const step = (el.querySelector(".aw-pcard")?.getBoundingClientRect().width || 320) + 16;
+    const step = (el.querySelector(".aw-pcard")?.getBoundingClientRect().width || 320) + 22;
     setActiveIdx(Math.min(PROJECTS.length - 1, Math.max(0, Math.round(el.scrollLeft / step))));
     setCanPrev(el.scrollLeft > 4);
     setCanNext(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
@@ -272,47 +393,144 @@ export default function Home() {
   const scrollCard = (dir: number) => {
     const el = trackRef.current;
     if (!el) return;
-    const step = (el.querySelector(".aw-pcard")?.getBoundingClientRect().width || 320) + 16;
+    if (wheelRafRef.current) {
+      cancelAnimationFrame(wheelRafRef.current);
+      wheelRafRef.current = 0;
+    }
+    wheelTargetRef.current = null;
+    el.dataset.wheeling = "0";
+    const step = (el.querySelector(".aw-pcard")?.getBoundingClientRect().width || 320) + 22;
     el.scrollBy({ left: dir * step, behavior: "smooth" });
   };
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const stopWheelMomentum = () => {
+      if (wheelRafRef.current) {
+        cancelAnimationFrame(wheelRafRef.current);
+        wheelRafRef.current = 0;
+      }
+      wheelTargetRef.current = null;
+      if (trackRef.current) {
+        trackRef.current.dataset.wheeling = "0";
+      }
+    };
+
+    const runMomentum = () => {
+      const el = trackRef.current;
+      if (!el || wheelTargetRef.current === null) {
+        stopWheelMomentum();
+        return;
+      }
+      const maxScrollLeft = Math.max(0, el.scrollWidth - el.clientWidth);
+      const target = Math.min(maxScrollLeft, Math.max(0, wheelTargetRef.current));
+      const diff = target - el.scrollLeft;
+
+      if (Math.abs(diff) < 0.75) {
+        el.scrollLeft = target;
+        syncCarousel();
+        stopWheelMomentum();
+        return;
+      }
+
+      el.scrollLeft += diff * 0.14;
+      syncCarousel();
+      wheelRafRef.current = requestAnimationFrame(runMomentum);
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      if (menuOpen || selectedProject) {
+        stopWheelMomentum();
+        return;
+      }
+
+      const section = projectsSectionRef.current;
+      const track = trackRef.current;
+      if (!section || !track) return;
+
+      let deltaY = e.deltaY;
+      let deltaX = e.deltaX;
+      if (e.deltaMode === 1) {
+        deltaY *= 16;
+        deltaX *= 16;
+      } else if (e.deltaMode === 2) {
+        deltaY *= window.innerHeight;
+        deltaX *= window.innerWidth;
+      }
+
+      if (deltaY <= 0) {
+        stopWheelMomentum();
+        return;
+      }
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        return;
+      }
+
+      const maxScrollLeft = track.scrollWidth - track.clientWidth;
+      if (maxScrollLeft <= 12) return;
+
+      if (track.scrollLeft >= maxScrollLeft - 4) {
+        stopWheelMomentum();
+        return;
+      }
+
+      const sectionRect = section.getBoundingClientRect();
+      const trackRect = track.getBoundingClientRect();
+      const isProjectsFramed =
+        sectionRect.top <= 115 &&
+        trackRect.top < window.innerHeight * 0.58 &&
+        trackRect.bottom >= window.innerHeight * 0.35;
+
+      if (!isProjectsFramed) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      track.dataset.wheeling = "1";
+      const base = wheelTargetRef.current ?? track.scrollLeft;
+      wheelTargetRef.current = Math.min(maxScrollLeft, Math.max(0, base + deltaY * 1.15));
+
+      if (!wheelRafRef.current) {
+        wheelRafRef.current = requestAnimationFrame(runMomentum);
+      }
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false, capture: true });
+    return () => {
+      stopWheelMomentum();
+      window.removeEventListener("wheel", onWheel, { capture: true });
+    };
+  }, [menuOpen, selectedProject]);
+
+  useEffect(() => {
     if (!menuOpen) return;
     document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setMenuOpen(false);
     };
+    const onResize = () => {
+      if (window.innerWidth >= 900) setMenuOpen(false);
+    };
     window.addEventListener("keydown", onKey);
+    window.addEventListener("resize", onResize);
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
       window.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", onResize);
     };
   }, [menuOpen]);
 
   useEffect(() => {
-    const els = document.querySelectorAll(".aw-reveal");
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      els.forEach((el) => el.classList.add("is-visible"));
-      return;
-    }
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12 }
-    );
-    els.forEach((el, i) => {
-      (el as HTMLElement).style.transitionDelay = `${(i % 6) * 60}ms`;
-      io.observe(el);
-    });
-
+    const els = Array.from(document.querySelectorAll<HTMLElement>(".aw-reveal"));
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const sections = ["about", "projects", "skills", "experience", "contact"];
-    const onScroll = () => {
+
+    const updateActiveNav = () => {
       for (const id of sections) {
         const node = document.getElementById(id);
         if (!node) continue;
@@ -323,10 +541,88 @@ export default function Home() {
         }
       }
     };
+
+    if (isReduced || isMobile) {
+      els.forEach((el) => {
+        el.dataset.revealed = "1";
+        el.style.opacity = "";
+        el.style.transform = "";
+        el.style.transition = "";
+        el.classList.add("is-visible");
+      });
+      window.addEventListener("scroll", updateActiveNav, { passive: true });
+      return () => {
+        window.removeEventListener("scroll", updateActiveNav);
+      };
+    }
+
+    const revealEl = (el: HTMLElement) => {
+      if (el.dataset.revealed === "1") return;
+      el.dataset.revealed = "1";
+      el.style.transition = `opacity 640ms cubic-bezier(0.16, 1, 0.3, 1) ${el.dataset.delay || "0ms"}, transform 640ms cubic-bezier(0.16, 1, 0.3, 1) ${el.dataset.delay || "0ms"}`;
+      el.style.opacity = "1";
+      el.style.transform = "translateY(0) scale(1)";
+      el.classList.add("is-visible");
+      window.setTimeout(() => {
+        el.style.transition = "";
+        el.style.opacity = "";
+        el.style.transform = "";
+      }, 820);
+    };
+
+    const checkVisible = () => {
+      const triggerY = window.innerHeight + 140;
+      for (const el of els) {
+        if (el.dataset.revealed === "1") continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= triggerY) {
+          revealEl(el);
+        }
+      }
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const target = entry.target as HTMLElement;
+            revealEl(target);
+            io.unobserve(target);
+          }
+        });
+      },
+      { threshold: 0, rootMargin: "160px 0px 160px 0px" }
+    );
+
+    els.forEach((el, i) => {
+      el.dataset.delay = `${(i % 5) * 55}ms`;
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.98) {
+        el.dataset.revealed = "1";
+        el.classList.add("is-visible");
+      } else {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(18px) scale(0.99)";
+        io.observe(el);
+      }
+    });
+
+    const onScroll = () => {
+      checkVisible();
+      updateActiveNav();
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("scroll", checkVisible, { passive: true, capture: true });
+    window.addEventListener("resize", checkVisible, { passive: true });
+    window.addEventListener("hashchange", checkVisible);
+
     return () => {
       io.disconnect();
       window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("scroll", checkVisible, { capture: true });
+      window.removeEventListener("resize", checkVisible);
+      window.removeEventListener("hashchange", checkVisible);
     };
   }, []);
 
@@ -375,62 +671,128 @@ export default function Home() {
               </a>
             ))}
           </nav>
+          <button
+            type="button"
+            className="aw-arrow-btn"
+            onClick={toggleTheme}
+            aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+            style={{ width: "40px", height: "40px", marginLeft: "4px" }}
+          >
+            {isDark ? <SunIcon /> : <MoonIcon />}
+          </button>
         </div>
 
         <div className="aw-mobile-bar">
           <Link href="/" style={{ fontWeight: 600, fontSize: "15px", letterSpacing: "-0.02em" }}>
             Muhammad Afrith
           </Link>
-          <button
-            type="button"
-            className="aw-menu-icon-btn"
-            onClick={() => setMenuOpen(true)}
-            aria-expanded={menuOpen}
-            aria-label="Open menu"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
-              <line x1="4" x2="20" y1="7" y2="7" />
-              <line x1="4" x2="20" y1="12" y2="12" />
-              <line x1="4" x2="20" y1="17" y2="17" />
-            </svg>
-          </button>
-        </div>
-
-        {menuOpen && (
-          <div className="aw-mobile-sheet" role="dialog" aria-modal="true" aria-label="Navigation menu">
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: "44px" }}>
-              <span style={{ fontWeight: 600, fontSize: "15px" }}>Muhammad Afrith</span>
-              <button
-                type="button"
-                className="aw-menu-icon-btn"
-                onClick={() => setMenuOpen(false)}
-                aria-label="Close menu"
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <button
+              type="button"
+              className="aw-menu-icon-btn"
+              onClick={toggleTheme}
+              aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+            >
+              {isDark ? <SunIcon /> : <MoonIcon />}
+            </button>
+            <button
+              type="button"
+              className="aw-menu-icon-btn"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-expanded={menuOpen}
+              aria-controls="aw-mobile-nav-sheet"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                aria-hidden="true"
+                style={{ pointerEvents: "none" }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
-                  <path d="M18 6 6 18" />
-                  <path d="m6 6 12 12" />
-                </svg>
-              </button>
-            </div>
-            <nav style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "32px" }} aria-label="Mobile">
-              {["About", "Projects", "Experience", "Skills", "Contact"].map((item) => (
+                <line x1="4" x2="20" y1="7" y2="7" />
+                <line x1="4" x2="20" y1="12" y2="12" />
+                <line x1="4" x2="20" y1="17" y2="17" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {menuOpen && (
+        <div
+          id="aw-mobile-nav-sheet"
+          className="aw-mobile-sheet"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", minHeight: "44px" }}>
+            <span style={{ fontWeight: 600, fontSize: "15px", letterSpacing: "-0.02em" }}>Muhammad Afrith</span>
+            <button
+              type="button"
+              className="aw-menu-icon-btn"
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                aria-hidden="true"
+                style={{ pointerEvents: "none" }}
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </button>
+          </div>
+          <nav style={{ display: "flex", flexDirection: "column", gap: "4px", marginTop: "32px" }} aria-label="Mobile">
+            {["About", "Projects", "Experience", "Skills", "Contact"].map((item) => {
+              const id = item.toLowerCase();
+              return (
                 <a
                   key={item}
-                  href={`#${item.toLowerCase()}`}
-                  onClick={() => setMenuOpen(false)}
-                  style={{ fontSize: "24px", minHeight: "48px", display: "flex", alignItems: "center", color: "#F5F3EF" }}
+                  href={`#${id}`}
+                  className={`aw-mobile-sheet-link ${activeNav === id ? "is-active" : ""}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.body.style.overflow = "";
+                    document.documentElement.style.overflow = "";
+                    setMenuOpen(false);
+                    requestAnimationFrame(() => {
+                      const target = document.getElementById(id);
+                      if (target) {
+                        const top = target.getBoundingClientRect().top + window.scrollY - 72;
+                        window.scrollTo({ top, behavior: "smooth" });
+                        window.history.replaceState(null, "", `#${id}`);
+                      }
+                    });
+                  }}
                 >
-                  {item}
+                  <span>{item}</span>
+                  <span style={{ fontSize: "14px", color: "#858078" }} aria-hidden="true">→</span>
                 </a>
-              ))}
-            </nav>
-          </div>
-        )}
-      </header>
+              );
+            })}
+          </nav>
+        </div>
+      )}
 
       <main id="main-content">
         <section className="aw-hero">
-          <div className="aw-container" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <HeroCanvas />
+          <div className="aw-hero-orbit aw-hero-orbit-a" aria-hidden="true" />
+          <div className="aw-hero-orbit aw-hero-orbit-b" aria-hidden="true" />
+          <div className="aw-container" style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
             <div className="aw-eyebrow">
               <span className="aw-eyebrow-rule" aria-hidden="true" />
               <span className="aw-label aw-fade-up" style={{ animationDelay: "180ms" }}>
@@ -531,7 +893,7 @@ export default function Home() {
             </h2>
 
             <div className="aw-about-grid">
-              <div className="aw-exp-card aw-reveal">
+              <div className="aw-exp-card aw-reveal" onPointerMove={handleCardGlow}>
                 <p className="aw-label" style={{ color: "#E8B77C", letterSpacing: "0.22em" }}>
                   WHO I AM
                 </p>
@@ -555,7 +917,7 @@ export default function Home() {
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "24px" }}>
-                <div className="aw-exp-card aw-reveal" style={{ padding: "28px" }}>
+                <div className="aw-exp-card aw-reveal" style={{ padding: "28px" }} onPointerMove={handleCardGlow}>
                   <p className="aw-label" style={{ color: "#E8B77C", letterSpacing: "0.22em" }}>
                     CURRENT FOCUS
                   </p>
@@ -567,7 +929,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="aw-exp-card aw-reveal" style={{ padding: "28px" }}>
+                <div className="aw-exp-card aw-reveal" style={{ padding: "28px" }} onPointerMove={handleCardGlow}>
                   <p className="aw-label" style={{ color: "#E8B77C", letterSpacing: "0.22em" }}>
                     PORTFOLIO DIRECTION
                   </p>
@@ -586,7 +948,7 @@ export default function Home() {
                 ["2", "EXPERIENCE ENTRIES"],
                 ["Dharmapuri", "LOCATION"],
               ].map(([val, label]) => (
-                <div key={label} className="aw-stat-card aw-reveal">
+                <div key={label} className="aw-stat-card aw-reveal" onPointerMove={handleCardGlow}>
                   <p style={{ fontSize: "22px", fontWeight: 600, color: "#E8B77C", lineHeight: 1.2 }}>
                     {val}
                   </p>
@@ -601,11 +963,14 @@ export default function Home() {
 
         <div className="aw-divider" />
 
-        <section id="projects" className="aw-section">
+        <section id="projects" ref={projectsSectionRef} className="aw-section aw-projects-section">
           <div className="aw-container">
             <div className="aw-projects-head aw-reveal">
               <div>
-                <p className="aw-label">SELECTED WORK — 09</p>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: "12px" }}>
+                  <span style={{ width: "24px", height: "1px", background: "var(--gold-text)" }} aria-hidden="true" />
+                  <p className="aw-label">PROJECTS</p>
+                </div>
                 <h2 className="aw-h2" style={{ marginTop: "16px" }}>
                   Things I&apos;ve shipped
                 </h2>
@@ -652,16 +1017,12 @@ export default function Home() {
               const shown = p.stack.slice(0, 3);
               const extra = p.stack.length - shown.length;
               return (
-                <div key={p.idx} className="aw-pcard">
-                  <Link
-                    href={`/projects/${p.slug}`}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      flex: "1 1 auto",
-                      textDecoration: "none",
-                      color: "inherit",
-                    }}
+                <TiltCard key={p.idx} className="aw-pcard">
+                  <button
+                    type="button"
+                    className="aw-pcard-trigger"
+                    onClick={() => setSelectedProject(p)}
+                    aria-label={`View details for ${p.title}`}
                   >
                     <div className="aw-pcard-cover">
                       <Image
@@ -674,7 +1035,11 @@ export default function Home() {
                       />
                     </div>
                     <div className="aw-pcard-body" style={{ minHeight: "auto", paddingBottom: "12px" }}>
-                      <span className="aw-label">{p.idx}</span>
+                      <div className="aw-pcard-meta">
+                        <span className="aw-label">{p.idx}</span>
+                        <span className="aw-label" style={{ color: "#6E6A63" }} aria-hidden="true">·</span>
+                        <span className="aw-label" style={{ color: "#858078" }}>{p.category}</span>
+                      </div>
                       <span className="aw-pcard-title">{p.title}</span>
                       <p className="aw-pcard-summary">{p.summary}</p>
                       {shown.length > 0 && (
@@ -688,7 +1053,7 @@ export default function Home() {
                         </div>
                       )}
                     </div>
-                  </Link>
+                  </button>
                   <div className="aw-pill-row" style={{ padding: "0 20px 20px", marginTop: 0 }}>
                     {p.links.apk?.startsWith("https://") && (
                       <a
@@ -735,7 +1100,7 @@ export default function Home() {
                       Ask
                     </button>
                   </div>
-                </div>
+                </TiltCard>
               );
             })}
           </div>
@@ -761,56 +1126,47 @@ export default function Home() {
           </div>
 
           <div className="aw-container">
-            <p className="aw-label aw-reveal">SKILLS</p>
+            <div className="aw-reveal" style={{ display: "inline-flex", alignItems: "center", gap: "12px" }}>
+              <span style={{ width: "24px", height: "1px", background: "var(--gold-text)" }} aria-hidden="true" />
+              <p className="aw-label">SKILLS</p>
+            </div>
             <h2 className="aw-h2 aw-reveal" style={{ marginTop: "16px", marginBottom: "40px" }}>
               Technical stack
             </h2>
             <div className="aw-skills-grid">
               {SKILL_BOXES.map((box) => (
-                <div
+                <TiltCard
                   key={box.title}
+                  maxTilt={3.5}
                   className="aw-skill-box aw-reveal"
+                  onPointerMove={handleCardGlow}
                   style={
                     {
                       "--accent-45": box.a45,
                       "--accent-25": box.a25,
                       "--accent-18": box.a18,
+                      "--skill-dot": box.dot,
                     } as React.CSSProperties
                   }
                 >
-                  <div className="aw-skill-icon" style={{ background: box.bg }}>
-                    <span
-                      style={{
-                        width: "8px",
-                        height: "8px",
-                        borderRadius: "999px",
-                        background: box.dot,
-                        display: "inline-block",
-                      }}
-                      aria-hidden="true"
-                    />
+                  <div className="aw-skill-head">
+                    <div className="aw-skill-icon" style={{ background: box.bg }}>
+                      <SkillCategoryIcon title={box.title} color={box.dot} />
+                    </div>
+                    <span className="aw-skill-count" style={{ color: box.dot }}>
+                      {String(box.items.length).padStart(2, "0")}
+                    </span>
                   </div>
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "20px",
-                      fontWeight: 600,
-                      color: "#F5F3EF",
-                      marginTop: "18px",
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    {box.title}
-                  </h3>
-                  <div className={box.items.length > 6 ? "aw-skill-pills-two" : "aw-skill-pills"}>
+                  <h3 className="aw-skill-title">{box.title}</h3>
+                  <div className="aw-skill-pills">
                     {box.items.map((item) => (
                       <span key={item} className="aw-skill-chip">
                         <TechLogo name={item} color={box.dot} />
-                        <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{item}</span>
+                        <span>{item}</span>
                       </span>
                     ))}
                   </div>
-                </div>
+                </TiltCard>
               ))}
             </div>
           </div>
@@ -818,72 +1174,56 @@ export default function Home() {
 
         <div className="aw-divider" />
 
-        <section id="experience" className="aw-section" style={{ paddingTop: "clamp(72px, 10vh, 120px)" }}>
+        <section id="experience" className="aw-section aw-exp-section" style={{ paddingTop: "clamp(72px, 10vh, 120px)" }}>
           <div className="aw-container">
-            <div className="aw-reveal" style={{ display: "inline-flex", alignItems: "center", gap: "12px" }}>
+            <div className="aw-reveal" style={{ display: "inline-flex", alignItems: "center", gap: "12px", marginBottom: "36px" }}>
               <span style={{ width: "24px", height: "1px", background: "var(--gold-text)" }} aria-hidden="true" />
-              <span className="aw-label">EXPERIENCE</span>
+              <h2 className="aw-label" style={{ color: "#E8B77C" }}>EXPERIENCE &amp; INTERNSHIPS</h2>
             </div>
-            <h2
-              className="aw-reveal"
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(32px, 4.4vw, 56px)",
-                fontWeight: 600,
-                letterSpacing: "-0.02em",
-                lineHeight: 1.05,
-                color: "#F5F3EF",
-                marginTop: "16px",
-                marginBottom: "40px",
-              }}
-            >
-              Professional <span style={{ color: "#E8B77C" }}>journey &amp; growth</span>.
-            </h2>
 
-            <div className="aw-exp-grid">
-              {EXPERIENCES.map((exp) => (
-                <div
-                  key={exp.company}
-                  tabIndex={0}
-                  className="aw-exp-card aw-reveal"
-                  style={
-                    {
-                      "--badge-glow":
-                        exp.badge === "DEVELOPMENT"
-                          ? "rgba(127, 207, 168, 0.35)"
-                          : "rgba(143, 184, 240, 0.35)",
-                    } as React.CSSProperties
-                  }
-                >
-                  <p
-                    className="aw-label"
-                    style={{ color: "#E8B77C", letterSpacing: "0.22em" }}
+            <div className="aw-exp-timeline">
+              {EXPERIENCES.map((exp, idx) => (
+                <div key={exp.company} className="aw-exp-item aw-reveal">
+                  <div className="aw-exp-marker" aria-hidden="true">
+                    <span className="aw-exp-node" />
+                  </div>
+                  <TiltCard
+                    maxTilt={2.6}
+                    className="aw-exp-card"
+                    onPointerMove={handleCardGlow}
+                    style={
+                      {
+                        "--badge-glow":
+                          exp.badge === "DEVELOPMENT"
+                            ? "rgba(127, 207, 168, 0.38)"
+                            : "rgba(143, 184, 240, 0.38)",
+                      } as React.CSSProperties
+                    }
                   >
-                    {exp.date}
-                  </p>
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "24px",
-                      fontWeight: 600,
-                      color: "#F5F3EF",
-                      marginTop: "10px",
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    {exp.role}
-                  </h3>
-                  <p style={{ fontSize: "14px", color: "#A8A49C", marginTop: "4px" }}>
-                    {exp.company}
-                  </p>
-                  <span className="aw-exp-badge" style={exp.badgeStyle}>
-                    {exp.badge}
-                  </span>
-                  <ul className="aw-exp-list">
-                    {exp.bullets.map((b) => (
-                      <li key={b}>{b}</li>
-                    ))}
-                  </ul>
+                    <div className="aw-exp-top">
+                      <div className="aw-exp-date-row">
+                        <span className="aw-label" style={{ color: "#E8B77C", letterSpacing: "0.2em" }}>
+                          0{idx + 1} · {exp.date}
+                        </span>
+                      </div>
+                      <span className="aw-exp-badge" style={exp.badgeStyle}>
+                        {exp.badge}
+                      </span>
+                    </div>
+
+                    <div className="aw-exp-header">
+                      <h3 className="aw-exp-role">{exp.role}</h3>
+                      <p className="aw-exp-company">{exp.company}</p>
+                    </div>
+
+                    <div className="aw-exp-divider" aria-hidden="true" />
+
+                    <ul className="aw-exp-list">
+                      {exp.bullets.map((b) => (
+                        <li key={b}>{b}</li>
+                      ))}
+                    </ul>
+                  </TiltCard>
                 </div>
               ))}
             </div>
@@ -961,7 +1301,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="aw-form-card">
+            <div className="aw-form-card" onPointerMove={handleCardGlow}>
               <form onSubmit={submitForm} style={{ display: "grid", gap: "18px" }}>
                 <div className="aw-form-row">
                   <div>
@@ -1210,6 +1550,11 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      <ProjectDetailsModal
+        project={selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
     </>
   );
 }

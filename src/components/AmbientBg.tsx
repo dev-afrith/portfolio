@@ -52,6 +52,12 @@ export default function AmbientBg() {
       cy += (ty - cy) * 0.08;
       layer.style.setProperty("--mx", `${cx.toFixed(1)}px`);
       layer.style.setProperty("--my", `${cy.toFixed(1)}px`);
+      const dx = Math.abs(tx - cx);
+      const dy = Math.abs(ty - cy);
+      if (dx < 0.25 && dy < 0.25) {
+        raf = 0;
+        return;
+      }
       raf = requestAnimationFrame(tick);
     };
 
@@ -83,6 +89,7 @@ export default function AmbientBg() {
     <div ref={layerRef} className="bg-layer" aria-hidden="true">
       <div className="bg-glow bg-glow-gold" />
       <div className="bg-glow bg-glow-cool" />
+      <div className="bg-glow bg-glow-center" />
       {PARTICLES.map((p, i) => (
         <span
           key={i}
@@ -101,4 +108,3 @@ export default function AmbientBg() {
     </div>
   );
 }
-

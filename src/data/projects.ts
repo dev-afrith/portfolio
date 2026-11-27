@@ -1,3 +1,11 @@
+import type { StaticImageData } from "next/image";
+import bizgenieCover from "@/assets/images/bizgenie_ai_cover_1795677804650.jpg";
+import tikizayaCover from "@/assets/images/tikizaya_cover_1795677803869.jpg";
+import skillsyncCover from "@/assets/images/skillsync_cover_1795677804325.jpg";
+import ridegramCover from "@/assets/images/ridegram_cover_1795677804389.jpg";
+import salaryPayrollCover from "@/assets/images/salary_payroll_cover_1795677804962.jpg";
+import notesAppCover from "@/assets/images/notes_app_cover_1795677805726.jpg";
+
 export type ProjectItem = {
   slug: string;
   idx: string;
@@ -5,7 +13,7 @@ export type ProjectItem = {
   title: string;
   subtitle: string;
   hue: string;
-  cover: string;
+  cover: string | StaticImageData;
   alt: string;
   seoDescription: string;
   summary: string;
@@ -91,7 +99,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "BizGenie AI",
     subtitle: "Multi-agent research platform",
     hue: "#2E5BFF",
-    cover: "/covers/bizgenie.svg",
+    cover: bizgenieCover,
     alt: "BizGenie AI — multi-agent research workspace",
     seoDescription:
       "BizGenie AI is a multi-agent platform for business research, market analysis, and document intelligence built by Muhammad Afrith using Python and LLM tooling.",
@@ -123,7 +131,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Tikizaya",
     subtitle: "Production social platform",
     hue: "#6B4EFF",
-    cover: "/covers/tikizaya.svg",
+    cover: tikizayaCover,
     alt: "Tikizaya — mobile social feed interface",
     seoDescription:
       "Tikizaya is a production-ready social platform with real users, built for scale and performance using Flutter, Dart, Firebase, REST APIs, and Node.js.",
@@ -152,7 +160,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "SkillSync",
     subtitle: "Skill-sharing collaboration platform",
     hue: "#E8A33D",
-    cover: "/covers/skillsync.svg",
+    cover: skillsyncCover,
     alt: "SkillSync — skill-sharing collaboration interface",
     seoDescription:
       "SkillSync is a full-stack collaboration platform for skill-sharing built with product design thinking using React, Node.js, Express.js, and MongoDB.",
@@ -181,7 +189,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Ridegram",
     subtitle: "Ride-sharing concept app",
     hue: "#2F9E8F",
-    cover: "/covers/ridegram.svg",
+    cover: ridegramCover,
     alt: "Ridegram — ride-sharing route and fare interface",
     seoDescription:
       "Ridegram is a ride-sharing concept app with a sleek interface and real-time features built by Muhammad Afrith with React Native, Node.js, and MongoDB.",
@@ -210,7 +218,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Salary Payroll Management",
     subtitle: "Enterprise payroll system",
     hue: "#5B6470",
-    cover: "/covers/salary-payroll.svg",
+    cover: salaryPayrollCover,
     alt: "Salary Payroll Management — payroll dashboard interface",
     seoDescription:
       "Salary Payroll Management is an enterprise payroll system with salary tracking and reporting built with Python, MySQL, and Tkinter by Muhammad Afrith.",
@@ -271,7 +279,7 @@ export const PROJECTS: ProjectItem[] = [
     title: "Notes App",
     subtitle: "Android Material 3 notes app",
     hue: "#E0459B",
-    cover: "/covers/notes-app.svg",
+    cover: notesAppCover,
     alt: "Notes App — Android Material 3 interface",
     seoDescription:
       "Notes App is an offline Android notes application built with Kotlin, Jetpack Compose, and Material 3 by Muhammad Afrith, with APK available on GitHub.",
